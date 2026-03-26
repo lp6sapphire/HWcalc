@@ -1,262 +1,276 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hero Wars: Калькулятор пачек</title>
+<title>Hero Wars: Team Calculator</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:linear-gradient(135deg,#0a0a1a,#111133,#0a0a1a);color:#e2e8f0;min-height:100vh}
-.wrap{max-width:960px;margin:0 auto;padding:10px 8px}
+.w{max-width:960px;margin:0 auto;padding:10px 8px}
 h1{font-size:20px;font-weight:800;text-align:center;background:linear-gradient(90deg,#f59e0b,#ef4444,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:2px}
 .sub{text-align:center;color:#64748b;font-size:11px;margin-bottom:10px}
-.tabs{display:flex;gap:5px;margin-bottom:12px}
-.tab-btn{flex:1;padding:8px 6px;border:2px solid #1e293b;border-radius:10px;background:rgba(12,12,40,0.9);color:#64748b;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s}
-.tab-btn.active{border-color:#f59e0b;background:rgba(245,158,11,0.12);color:#f59e0b}
-.filters{display:flex;gap:4px;margin-bottom:6px;flex-wrap:wrap}
-.fbtn{padding:4px 10px;border-radius:7px;font-size:11px;cursor:pointer;border:1px solid #1e293b;background:transparent;color:#64748b;font-weight:400;transition:all .15s}
-.fbtn.on{font-weight:700}
-.search{width:100%;padding:6px 10px;border-radius:8px;border:1px solid #1e293b;background:rgba(25,25,60,0.9);color:#fff;font-size:12px;margin-bottom:8px}
-.hero-row{display:flex;align-items:center;gap:6px;padding:5px 8px;background:rgba(12,12,40,0.9);border-radius:7px;border:1px solid #1e293b;margin-bottom:2px}
-.hero-row .icon{font-size:14px;width:20px;text-align:center}
-.hero-row .hname{font-size:12px;font-weight:600;color:#fff;min-width:115px}
-.badge{font-size:9px;padding:1px 6px;border-radius:8px;font-weight:600;white-space:nowrap}
-.power-input{width:75px;padding:3px 6px;border-radius:6px;border:1px solid #1e293b;background:rgba(25,25,60,0.9);color:#64748b;font-size:12px;text-align:right}
-.power-input.filled{color:#fff}
-.bar-wrap{width:40px;height:5px;border-radius:3px;background:rgba(255,255,255,0.06);overflow:hidden}
-.bar-inner{height:100%;border-radius:3px}
-.ml-auto{margin-left:auto}
-.flex{display:flex}.gap4{gap:4px}.gap5{gap:5px}.gap6{gap:6px}.wrap-yes{flex-wrap:wrap}.col{flex-direction:column}.items-center{align-items:center}
-.card{background:rgba(12,12,40,0.9);border-radius:12px;padding:12px;border:1px solid #1e293b;margin-bottom:10px}
-.team-hero{flex:1 1 80px;border-radius:9px;padding:7px 4px;text-align:center}
-.swap-row{font-size:11px;border-radius:7px;padding:5px 8px;color:#cbd5e1;margin-bottom:3px}
-.enemy-btn{padding:3px 8px;border-radius:7px;font-size:10px;cursor:pointer;border:1px solid #1e293b;background:transparent;color:#64748b;font-weight:400;transition:all .15s}
-.enemy-btn.sel{border:2px solid #ef4444;background:rgba(239,68,68,0.2);color:#fca5a5;font-weight:700}
-.enemy-btn.dis{opacity:0.3}
-.picked-tag{font-size:11px;padding:3px 8px;border-radius:8px;background:rgba(239,68,68,0.15);color:#fca5a5;font-weight:600;cursor:pointer;display:inline-block}
-.counter-hero{flex:1 1 90px;background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.25);border-radius:10px;padding:8px 5px;text-align:center}
-.formula-box{background:rgba(96,165,250,0.08);border:1px solid rgba(96,165,250,0.25);border-radius:10px;padding:8px;margin-bottom:10px;font-size:10px;color:#93c5fd;line-height:1.6}
-.info-box{background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);border-radius:10px;padding:8px;font-size:11px;color:#fde68a;line-height:1.5;margin-bottom:10px}
-.hidden{display:none}
-.alt-btn{font-size:10px;padding:3px 8px;border-radius:6px;cursor:pointer;font-weight:600;border:1px solid;background:transparent}
+.tabs{display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap}
+.tb{flex:1;min-width:70px;padding:7px 4px;border:2px solid #1e293b;border-radius:10px;background:rgba(12,12,40,.9);color:#64748b;font-size:11px;font-weight:700;cursor:pointer}
+.tb.on{border-color:#f59e0b;background:rgba(245,158,11,.12);color:#f59e0b}
+.fl{display:flex;gap:3px;margin-bottom:6px;flex-wrap:wrap}
+.fb{padding:3px 8px;border-radius:7px;font-size:10px;cursor:pointer;border:1px solid #1e293b;background:transparent;color:#64748b;font-weight:400}
+.fb.on{font-weight:700}
+.si{width:100%;padding:6px 10px;border-radius:8px;border:1px solid #1e293b;background:rgba(25,25,60,.9);color:#fff;font-size:12px;margin-bottom:8px}
+.hr{display:flex;align-items:center;gap:5px;padding:4px 7px;background:rgba(12,12,40,.9);border-radius:7px;border:1px solid #1e293b;margin-bottom:2px}
+.bg{font-size:8px;padding:1px 5px;border-radius:6px;font-weight:600;white-space:nowrap}
+.pi{width:70px;padding:2px 5px;border-radius:5px;border:1px solid #1e293b;background:rgba(25,25,60,.9);color:#64748b;font-size:11px;text-align:right}
+.pi.ok{color:#fff}
+.cd{background:rgba(12,12,40,.9);border-radius:12px;padding:12px;border:1px solid #1e293b;margin-bottom:10px}
+.th{flex:1 1 75px;border-radius:9px;padding:6px 3px;text-align:center}
+.sw-btn{font-size:9px;padding:3px 8px;border-radius:6px;cursor:pointer;font-weight:600;border:1px solid;display:inline-flex;align-items:center;gap:3px;margin:2px;background:transparent}
+.sw-btn:hover{filter:brightness(1.3)}
+.hd{display:none}
+.ep-wrap{background:rgba(15,15,50,.7);border:2px solid #334155;border-radius:10px;padding:8px;margin-bottom:10px;max-height:200px;overflow-y:auto}
+.eb{padding:4px 10px;border-radius:8px;font-size:10px;cursor:pointer;border:2px solid #1e293b;background:rgba(20,20,50,.8);color:#94a3b8;font-weight:500;margin:2px}
+.eb.sel{border-color:#ef4444;background:rgba(239,68,68,.25);color:#fca5a5;font-weight:700;box-shadow:0 0 8px rgba(239,68,68,.3)}
+.eb.dis{opacity:.25;pointer-events:none}
+.pt{font-size:10px;padding:3px 8px;border-radius:8px;background:rgba(239,68,68,.15);color:#fca5a5;font-weight:600;cursor:pointer;display:inline-block;margin:2px;border:1px solid rgba(239,68,68,.3)}
+.ch{flex:1 1 85px;border-radius:10px;padding:8px 4px;text-align:center}
+.ib{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:10px;padding:8px;font-size:11px;color:#fde68a;line-height:1.5;margin-bottom:10px}
+.fmb{background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.25);border-radius:10px;padding:8px;margin-bottom:10px;font-size:10px;color:#93c5fd;line-height:1.6}
+.io-bar{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;align-items:center}
+.io-btn{padding:4px 10px;border-radius:7px;font-size:10px;font-weight:600;cursor:pointer;border:1px solid #334155;background:rgba(30,30,70,.8);color:#94a3b8}
+.io-btn:hover{background:rgba(50,50,90,.8);color:#fff}
+.ct-section{border:1px solid;border-radius:10px;padding:12px;margin-bottom:10px}
+.dict-row{display:flex;padding:4px 8px;border-bottom:1px solid #1e293b;font-size:12px;align-items:center;gap:8px}
+.dict-row:nth-child(even){background:rgba(255,255,255,.02)}
+.epi{width:60px;padding:2px 4px;border-radius:4px;border:1px solid #1e293b;background:rgba(25,25,60,.9);color:#64748b;font-size:10px;text-align:right}
+.epi.ok{color:#fca5a5}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <h1>Hero Wars: Калькулятор пачек</h1>
-  <p class="sub">79 героев &bull; 6 фракций &bull; 7 ролей &bull; Данные сохраняются в браузере</p>
-  <div class="tabs">
-    <button class="tab-btn active" data-tab="heroes" onclick="switchTab('heroes')">Герои (<span id="fc">0</span>/79)</button>
-    <button class="tab-btn" data-tab="teams" onclick="switchTab('teams')">4 Пачки</button>
-    <button class="tab-btn" data-tab="counter" onclick="switchTab('counter')">Контрпик</button>
-  </div>
-  <div id="tab-heroes"><input class="search" id="hs" placeholder="Поиск героя..." oninput="rH()"><div class="filters" id="rf"></div><div class="filters" id="ff"></div><div class="filters" id="sf"></div><div id="hl"></div></div>
-  <div id="tab-teams" class="hidden"><div class="info-box"><strong>20 уникальных героев</strong> для Гранд Арены. Мощность = сумма. Кнопка Альт — замены.</div><div id="tl"></div><div class="card"><div style="font-size:13px">Общая мощность: <strong style="font-size:15px" id="tp">0</strong></div></div></div>
-  <div id="tab-counter" class="hidden"><div class="formula-box"><strong>Формула:</strong> counterScore = sum(мои counters пересечение теги врага) x 2 + sum(мои теги пересечение уязвимости врага) x 1.5 + бонус типа x 0.3<br>finalScore = counterScore x (мощность / 100к). Гарантия: 1 танк + 1 хилер + 3 лучших.</div><div style="font-size:12px;font-weight:700;color:#ef4444;margin-bottom:6px">Враги (<span id="ec">0</span>/5) <button onclick="enemyPicks=[];rE()" style="margin-left:8px;font-size:10px;color:#64748b;background:transparent;border:1px solid #1e293b;border-radius:6px;padding:1px 7px;cursor:pointer">Сброс</button></div><input class="search" id="es" placeholder="Поиск..." oninput="rE()"><div class="filters" id="erf"></div><div class="filters" id="eff"></div><div id="ep" style="display:flex;flex-wrap:wrap;gap:3px;max-height:180px;overflow-y:auto;margin-bottom:10px"></div><div id="epk" style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px"></div><div id="cr"></div></div>
+<div class="w">
+<h1>Hero Wars: Team Calculator</h1>
+<p class="sub">79 Heroes &bull; 6 Factions &bull; 7 Roles &bull; Counter-pick Engine &bull; Export/Import</p>
+<div class="tabs">
+<button class="tb on" data-t="heroes" onclick="go('heroes')">Heroes (<span id="fc">0</span>/79)</button>
+<button class="tb" data-t="teams" onclick="go('teams')">Meta Teams</button>
+<button class="tb" data-t="counter" onclick="go('counter')">Counter-Pick</button>
+<button class="tb" data-t="dict" onclick="go('dict')">EN/RU</button>
 </div>
-<script>
-var RL={tank:{l:"Танк",i:"\uD83D\uDEE1",c:"#ef4444"},warrior:{l:"Воин",i:"\u2694\uFE0F",c:"#f59e0b"},marksman:{l:"Стрелок",i:"\uD83C\uDFF9",c:"#22c55e"},mage:{l:"Маг",i:"\uD83D\uDD2E",c:"#8b5cf6"},support:{l:"Саппорт",i:"\u2728",c:"#06b6d4"},control:{l:"Контроль",i:"\uD83C\uDFAD",c:"#e879f9"},healer:{l:"Хилер",i:"\uD83D\uDC9A",c:"#ec4899"}};
-var FL={eternity:{l:"Вечность",c:"#a855f7"},nature:{l:"Природа",c:"#22c55e"},chaos:{l:"Хаос",c:"#ef4444"},progress:{l:"Прогресс",c:"#3b82f6"},mystery:{l:"Тайна",c:"#c084fc"},honor:{l:"Честь",c:"#f59e0b"}};
-var RW=[
-["astaroth","Астарот","tank","chaos","phys",["resurrection","shield"],["summon","magic"]],
-["aurora","Аврора","tank","nature","phys",["dodge","reflect"],["magic","anti_dodge"]],
-["corvus","Корвус","tank","eternity","phys",["totem","undead"],["backline","displacement"]],
-["julius","Юлиус","tank","progress","phys",["shield","speed_buff","progress"],["burst","anti_shield"]],
-["cleaver","Кливер","tank","chaos","phys",["hook","displacement"],["backline","control"]],
-["ziri","Зири","tank","mystery","phys",["burrow","armor_pen"],["magic","percent_dmg"]],
-["rufus","Руфус","tank","mystery","magic",["magic_immune","anti_magic"],["physical"]],
-["electra","Электра","tank","eternity","magic",["absorb","mag_debuff","hp_convert"],["crit","percent_dmg"]],
-["chabba","Чабба","tank","nature","phys",["devour"],["backline","magic"]],
-["luther","Лютер","tank","honor","phys",["displacement"],["magic","burst"]],
-["mushroom","Муши и Шрум","tank","nature","magic",["summon","spores","nature"],["displacement","burst"]],
-["yasmine","Ясмин","warrior","nature","phys",["crit","poison","assassin","backline_dive"],["anti_crit","totem"]],
-["karkh","К'арх","warrior","eternity","phys",["displacement","energy_gain","airborne"],["anti_displacement","fox_marks"]],
-["galahad","Галахад","warrior","honor","phys",["lifesteal","phys_dps"],["magic","control"]],
-["ishmael","Исмаил","warrior","honor","phys",["lifesteal","crit","berserk"],["anti_crit","control"]],
-["qingmao","Цин Мао","warrior","honor","phys",["armor_pen","tank_killer"],["magic","backline"]],
-["tristan","Тристан","warrior","honor","phys",["phys_buff","honor"],["magic"]],
-["elmir","Эльмир","warrior","nature","phys",["phys_dps","speed","armor_pen"],["control","magic"]],
-["drayne","Дрейн","warrior","eternity","phys",["anti_res","execute","crushing","aoe"],["fox_marks","magic"]],
-["kayla","Кайла","warrior","chaos","phys",["crit","fire_herald","burn"],["anti_crit","control"]],
-["oya","Оя","warrior","nature","phys",["nature","phys_dps"],["magic","control"]],
-["peech","Пич","warrior","chaos","phys",["chaos","scaling_dmg"],["burst","magic"]],
-["leonel","Леонел","warrior","nature","phys",["anti_shield","nature","assassin"],["magic","control"]],
-["tmnt","Черепашки","warrior","nature","phys",["combo","phys_dps"],["magic","control"]],
-["keira","Кейра","marksman","eternity","phys",["crit","aoe","blades"],["anti_crit","dodge"]],
-["dante","Данте","marksman","eternity","phys",["dodge","pushback"],["anti_dodge","magic"]],
-["artemis","Артемис","marksman","honor","phys",["crit","honor"],["control","magic"]],
-["daredevil","Дерзкая","marksman","progress","phys",["crit","combo"],["control"]],
-["darkstar","Тёмная Звезда","marksman","nature","phys",["mark","nature"],["control","burst"]],
-["isaac","Айзек","marksman","progress","phys",["silence","anti_magic","drone","progress"],["physical","displacement"]],
-["jhu","Джу","marksman","nature","phys",["percent_dmg","berserk"],["control","burst"]],
-["cascade","Каскад","marksman","mystery","magic",["anti_res","freeze","mystery"],["physical","burst"]],
-["fox","Фокс","marksman","progress","phys",["energy_boost"],["control","burst"]],
-["ginger","Джинджер","marksman","progress","phys",["armor_pen"],["control","magic"]],
-["astridlucas","Астрид и Лукас","marksman","progress","phys",["pet_synergy"],["magic","control"]],
-["laracroft","Лара Крофт","marksman","progress","phys",["scaling","crit","progress"],["control","magic"]],
-["iris","Ирис","mage","progress","magic",["soul_dmg","ignore_def"],["physical","burst"]],
-["satori","Сатори","mage","mystery","magic",["fox_marks","anti_energy"],["anti_magic","magic_immune"]],
-["orion","Орион","mage","progress","magic",["magic_dps","progress"],["physical","silence"]],
-["lilith","Лилит","mage","chaos","magic",["magic_dps","chaos"],["silence","burst"]],
-["xesha","Зе'Ша","mage","chaos","magic",["magic_dps","execute"],["silence","physical"]],
-["lars","Ларс","mage","chaos","magic",["twins","water_mark","aoe"],["silence","anti_magic"]],
-["cornelius","Корнелиус","mage","honor","magic",["int_killer"],["physical"]],
-["kai","Кай","mage","chaos","magic",["nature_dmg","magic_dps"],["silence","physical"]],
-["mojo","Моджо","mage","nature","magic",["curse"],["physical","burst"]],
-["heidi","Хейди","mage","mystery","magic",["anti_dodge"],["physical","burst"]],
-["folio","Фолио","mage","mystery","magic",["int_steal","aoe"],["physical","burst"]],
-["alvanor","Алванор","support","nature","magic",["mdef_buff","nature"],["physical"]],
-["fafnir","Фафнир","support","honor","phys",["phys_buff","shield","honor"],["magic"]],
-["helios","Гелиос","support","honor","magic",["anti_crit","reflect_crit"],["physical","displacement"]],
-["sebastian","Себастьян","support","progress","phys",["crit_buff","anti_cc","progress"],["magic"]],
-["jet","Джет","support","progress","phys",["crit_buff","armor_buff"],["magic","control"]],
-["nebula","Небула","support","progress","magic",["dmg_buff","cleanse"],["displacement","control"]],
-["amira","Амира","support","mystery","magic",["anti_crit","gold_storm"],["physical"]],
-["celeste","Селеста","support","mystery","magic",["heal_support","anti_heal"],["displacement","burst"]],
-["krista","Криста","support","chaos","magic",["twins","water_mark","freeze"],["silence","anti_magic"]],
-["soleil","Солей","support","honor","magic",["halo","def_shred"],["displacement"]],
-["tempus","Темпус","support","mystery","magic",["time_stop","debuff_extend"],["physical","burst"]],
-["miu","Мию","support","mystery","magic",["mystery","shield_s"],["physical"]],
-["octavia","Октавия","support","progress","phys",["dodge_buff","phys_buff"],["anti_dodge","magic"]],
-["phobos","Фобос","control","eternity","magic",["fear","energy_control"],["physical"]],
-["faceless","Безликий","control","eternity","magic",["copy_ult","displacement"],["burst"]],
-["arachne","Арахна","control","progress","magic",["teleport","stun"],["burst"]],
-["judge","Джадж","control","progress","magic",["shield","stun","progress"],["displacement"]],
-["peppy","Пеппи","control","chaos","magic",["cleanse","chaos"],["physical"]],
-["lian","Лиан","control","mystery","magic",["charm","anti_dodge"],["physical","burst"]],
-["jorgen","Йорген","control","chaos","magic",["energy_steal","curse"],["physical","burst"]],
-["polaris","Полярис","control","progress","magic",["stun","speed_buff","progress"],["physical"]],
-["andvari","Андвари","control","mystery","phys",["anti_displacement","armor_buff"],["magic"]],
-["somna","Сомна","control","mystery","magic",["sleep","debuff"],["physical","burst"]],
-["thea","Теа","healer","nature","magic",["heal","speed_buff"],["anti_heal"]],
-["markus","Маркус","healer","honor","magic",["heal","honor"],["anti_heal"]],
-["morrigan","Морриган","healer","eternity","magic",["anti_res","undead","summon"],["physical"]],
-["dorian","Дориан","healer","chaos","magic",["vampirism_aura","heal"],["anti_heal","burst"]],
-["aidan","Аидан","healer","chaos","magic",["resurrection","buff","fire_herald"],["anti_res"]],
-["maya","Майя","healer","nature","magic",["heal","flower"],["anti_heal","burst"]],
-["guus","Гуус","healer","honor","magic",["heal","honor"],["anti_heal"]],
-["byrna","Бирна","healer","nature","magic",["heal","max_hp_buff","spirit"],["anti_heal","burst"]],
-["martha","Марта","healer","mystery","magic",["heal","speed_buff"],["anti_heal"]]
-];
-var H=RW.map(function(h){return{id:h[0],name:h[1],role:h[2],fac:h[3],dmg:h[4],tags:h[5],cnt:h[6]};});
-var TM=[
-{n:"Ясмин-Ассасин",cl:"#ef4444",d:"Ясмин прыгает на слабейшего, Себастьян крит+антиCC, Йорген крадёт энергию, Марта ускоряет, Астарот воскрешает.",ids:["astaroth","yasmine","sebastian","jorgen","martha"],sw:[{f:"jorgen",t:"celeste",w:"Антихил вместо контроля"},{f:"martha",t:"dorian",w:"Вампиризм для Ясмин"},{f:"astaroth",t:"galahad",w:"Больше урона"}]},
-{n:"Дрейн-Вечность",cl:"#a855f7",d:"Корвус тотем, Кейра AoE ДД, Дрейн добивает+антирес, Морриган антирес, Безликий копирует.",ids:["corvus","drayne","keira","morrigan","faceless"],sw:[{f:"faceless",t:"nebula",w:"Бафф урона"},{f:"morrigan",t:"dorian",w:"Вампиризм"},{f:"keira",t:"dante",w:"Уклонение"}]},
-{n:"Близнецы (Ларс+Криста)",cl:"#3b82f6",d:"Метки воды = взрывной маг. урон. Юлиус щиты. Селеста антихил. Андвари защита.",ids:["julius","lars","krista","celeste","andvari"],sw:[{f:"julius",t:"rufus",w:"Иммун к магии"},{f:"celeste",t:"maya",w:"Больше хила"},{f:"andvari",t:"phobos",w:"Страх+контроль"}]},
-{n:"Сатори-маги",cl:"#14b8a6",d:"Электра конвертит защиту в HP+баф маг.атаки. Сатори метки. Небула баф. Гелиос антикрит. Теа хил.",ids:["electra","satori","nebula","helios","thea"],sw:[{f:"electra",t:"ziri",w:"Против физ."},{f:"helios",t:"amira",w:"Антикрит штормом"},{f:"thea",t:"byrna",w:"Макс HP"}]}
-];
-var P={},sC="power",sD="desc",fR="all",fF="all",efR="all",efF="all",enemyPicks=[],oSw={};
-function ld(){try{var d=localStorage.getItem("hw-p");if(d)P=JSON.parse(d);else P={yasmine:107000,drayne:94000,astaroth:51000,byrna:63000};}catch(e){P={yasmine:107000,drayne:94000};}}
-function sv(){try{localStorage.setItem("hw-p",JSON.stringify(P));}catch(e){}}
-function fH(id){return H.find(function(h){return h.id===id;});}
-function fmt(n){return n?n.toLocaleString("ru"):"\u2014";}
 
-function switchTab(t){
-  ["heroes","teams","counter"].forEach(function(x){document.getElementById("tab-"+x).className=x===t?"":"hidden";});
-  document.querySelectorAll(".tab-btn").forEach(function(b){b.className="tab-btn"+(b.dataset.tab===t?" active":"");});
-  if(t==="heroes")rH();if(t==="teams")rT();if(t==="counter"){rE();rC();}
-}
+<div id="t-heroes">
+<div class="io-bar">
+<button class="io-btn" onclick="exprt()">📥 Export</button>
+<button class="io-btn" onclick="document.getElementById('imp-f').click()">📤 Import</button>
+<input type="file" id="imp-f" accept=".json" style="display:none" onchange="imprt(this)">
+<span style="font-size:10px;color:#64748b">Auto-saved in browser</span>
+</div>
+<input class="si" id="hs" placeholder="Search hero..." oninput="rH()">
+<div class="fl" id="rf"></div>
+<div class="fl" id="ff"></div>
+<div class="fl" id="sf"></div>
+<div id="hl"></div>
+</div>
+
+<div id="t-teams" class="hd">
+<div class="ib"><strong>Meta teams 2026.</strong> Heroes may overlap — pick 3 non-overlapping for Grand Arena. Click swap buttons to switch heroes.</div>
+<div id="tl"></div>
+</div>
+
+<div id="t-counter" class="hd">
+<div class="fmb"><strong>Formula:</strong> counterScore = &sum;(my counters &cap; enemy tags)&times;2 + &sum;(my tags &cap; enemy weaknesses)&times;1.5 + dmg type bonus&times;0.3<br>
+finalScore = counterScore &times; (power / 100k). Guaranteed: 1 tank + 1 healer + 3 best scorers.<br>
+<strong>Ideal Pick</strong> = best counter ignoring your power. <strong>Your Best Pick</strong> = weighted by your heroes' power.</div>
+<div style="font-size:13px;font-weight:700;color:#ef4444;margin-bottom:8px">Enemy Team (<span id="ec">0</span>/5)
+<button onclick="eP=[];rE()" style="margin-left:8px;font-size:10px;color:#64748b;background:transparent;border:1px solid #1e293b;border-radius:6px;padding:2px 8px;cursor:pointer">Reset</button></div>
+<input class="si" id="es" placeholder="Search enemy..." oninput="rE()">
+<div class="fl" id="erf"></div>
+<div class="fl" id="eff"></div>
+<p style="font-size:10px;color:#475569;margin-bottom:4px">Click hero to add/remove. Optionally enter enemy power:</p>
+<div class="ep-wrap" id="ep"></div>
+<div id="epk" style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px"></div>
+<div id="cr"></div>
+</div>
+
+<div id="t-dict" class="hd">
+<input class="si" id="ds" placeholder="Search name..." oninput="rD()">
+<div id="dl"></div>
+</div>
+</div>
+
+<script>
+var RL={tank:{l:"Tank",i:"\uD83D\uDEE1",c:"#ef4444"},warrior:{l:"Warrior",i:"\u2694\uFE0F",c:"#f59e0b"},marksman:{l:"Marksman",i:"\uD83C\uDFF9",c:"#22c55e"},mage:{l:"Mage",i:"\uD83D\uDD2E",c:"#8b5cf6"},support:{l:"Support",i:"\u2728",c:"#06b6d4"},control:{l:"Control",i:"\uD83C\uDFAD",c:"#e879f9"},healer:{l:"Healer",i:"\uD83D\uDC9A",c:"#ec4899"}};
+var FL={eternity:{l:"Eternity",c:"#a855f7"},nature:{l:"Nature",c:"#22c55e"},chaos:{l:"Chaos",c:"#ef4444"},progress:{l:"Progress",c:"#3b82f6"},mystery:{l:"Mystery",c:"#c084fc"},honor:{l:"Honor",c:"#f59e0b"}};
+
+// [id, EN name, RU name, role, faction, dmg, tags[], counters[]]
+var RW=[
+["astaroth","Astaroth","\u0410\u0441\u0442\u0430\u0440\u043e\u0442","tank","chaos","phys",["resurrection","shield"],["summon","magic"]],
+["aurora","Aurora","\u0410\u0432\u0440\u043e\u0440\u0430","tank","nature","phys",["dodge","reflect"],["magic","anti_dodge"]],
+["corvus","Corvus","\u041a\u043e\u0440\u0432\u0443\u0441","tank","eternity","phys",["totem","undead"],["backline","displacement"]],
+["julius","Julius","\u042e\u043b\u0438\u0443\u0441","tank","progress","phys",["shield","speed_buff","progress"],["burst","anti_shield"]],
+["cleaver","Cleaver","\u041a\u043b\u0438\u0432\u0435\u0440","tank","chaos","phys",["hook","displacement"],["backline","control"]],
+["ziri","Ziri","\u0417\u0438\u0440\u0438","tank","mystery","phys",["burrow","armor_pen"],["magic","percent_dmg"]],
+["rufus","Rufus","\u0420\u0443\u0444\u0443\u0441","tank","mystery","magic",["magic_immune","anti_magic"],["physical"]],
+["electra","Electra","\u042d\u043b\u0435\u043a\u0442\u0440\u0430","tank","eternity","magic",["absorb","mag_debuff","hp_convert"],["crit","percent_dmg"]],
+["chabba","Chabba","\u0427\u0430\u0431\u0431\u0430","tank","nature","phys",["devour"],["backline","magic"]],
+["luther","Luther","\u041b\u044e\u0442\u0435\u0440","tank","honor","phys",["displacement"],["magic","burst"]],
+["mushroom","Mushy & Shroom","\u041c\u0443\u0448\u0438 \u0438 \u0428\u0440\u0443\u043c","tank","nature","magic",["summon","spores","nature"],["displacement","burst"]],
+["yasmine","Yasmine","\u042f\u0441\u043c\u0438\u043d","warrior","nature","phys",["crit","poison","assassin","backline_dive"],["anti_crit","totem"]],
+["karkh","K'arkh","\u041a'\u0430\u0440\u0445","warrior","eternity","phys",["displacement","energy_gain","airborne"],["anti_displacement","fox_marks"]],
+["galahad","Galahad","\u0413\u0430\u043b\u0430\u0445\u0430\u0434","warrior","honor","phys",["lifesteal","phys_dps"],["magic","control"]],
+["ishmael","Ishmael","\u0418\u0441\u043c\u0430\u0438\u043b","warrior","honor","phys",["lifesteal","crit","berserk"],["anti_crit","control"]],
+["qingmao","Qing Mao","\u0426\u0438\u043d \u041c\u0430\u043e","warrior","honor","phys",["armor_pen","tank_killer"],["magic","backline"]],
+["tristan","Tristan","\u0422\u0440\u0438\u0441\u0442\u0430\u043d","warrior","honor","phys",["phys_buff","honor"],["magic"]],
+["elmir","Elmir","\u042d\u043b\u044c\u043c\u0438\u0440","warrior","nature","phys",["phys_dps","speed","armor_pen"],["control","magic"]],
+["drayne","Drayne","\u0414\u0440\u0435\u0439\u043d","warrior","eternity","phys",["anti_res","execute","crushing","aoe"],["fox_marks","magic"]],
+["kayla","Kayla","\u041a\u0430\u0439\u043b\u0430","warrior","chaos","phys",["crit","fire_herald","burn"],["anti_crit","control"]],
+["oya","Oya","\u041e\u044f","warrior","nature","phys",["nature","phys_dps"],["magic","control"]],
+["peech","Peech","\u041f\u0438\u0447","warrior","chaos","phys",["chaos","scaling_dmg"],["burst","magic"]],
+["leonel","Leonel","\u041b\u0435\u043e\u043d\u0435\u043b","warrior","nature","phys",["anti_shield","nature","assassin"],["magic","control"]],
+["tmnt","TMNT","\u0427\u0435\u0440\u0435\u043f\u0430\u0448\u043a\u0438","warrior","nature","phys",["combo","phys_dps"],["magic","control"]],
+["keira","Keira","\u041a\u0435\u0439\u0440\u0430","marksman","eternity","phys",["crit","aoe","blades"],["anti_crit","dodge"]],
+["dante","Dante","\u0414\u0430\u043d\u0442\u0435","marksman","eternity","phys",["dodge","pushback"],["anti_dodge","magic"]],
+["artemis","Artemis","\u0410\u0440\u0442\u0435\u043c\u0438\u0441","marksman","honor","phys",["crit","honor"],["control","magic"]],
+["daredevil","Daredevil","\u0414\u0435\u0440\u0437\u043a\u0430\u044f","marksman","progress","phys",["crit","combo"],["control"]],
+["darkstar","Dark Star","\u0422\u0451\u043c\u043d\u0430\u044f \u0417\u0432\u0435\u0437\u0434\u0430","marksman","nature","phys",["mark","nature"],["control","burst"]],
+["isaac","Isaac","\u0410\u0439\u0437\u0435\u043a","marksman","progress","phys",["silence","anti_magic","drone","progress"],["physical","displacement"]],
+["jhu","Jhu","\u0414\u0436\u0443","marksman","nature","phys",["percent_dmg","berserk"],["control","burst"]],
+["cascade","Cascade","\u041a\u0430\u0441\u043a\u0430\u0434","marksman","mystery","magic",["anti_res","freeze","mystery"],["physical","burst"]],
+["fox","Fox","\u0424\u043e\u043a\u0441","marksman","progress","phys",["energy_boost"],["control","burst"]],
+["ginger","Ginger","\u0414\u0436\u0438\u043d\u0434\u0436\u0435\u0440","marksman","progress","phys",["armor_pen"],["control","magic"]],
+["astridlucas","Astrid & Lucas","\u0410\u0441\u0442\u0440\u0438\u0434 \u0438 \u041b\u0443\u043a\u0430\u0441","marksman","progress","phys",["pet_synergy"],["magic","control"]],
+["laracroft","Lara Croft","\u041b\u0430\u0440\u0430 \u041a\u0440\u043e\u0444\u0442","marksman","progress","phys",["scaling","crit","progress"],["control","magic"]],
+["iris","Iris","\u0418\u0440\u0438\u0441","mage","progress","magic",["soul_dmg","ignore_def"],["physical","burst"]],
+["satori","Satori","\u0421\u0430\u0442\u043e\u0440\u0438","mage","mystery","magic",["fox_marks","anti_energy"],["anti_magic","magic_immune"]],
+["orion","Orion","\u041e\u0440\u0438\u043e\u043d","mage","progress","magic",["magic_dps","progress"],["physical","silence"]],
+["lilith","Lilith","\u041b\u0438\u043b\u0438\u0442","mage","chaos","magic",["magic_dps","chaos"],["silence","burst"]],
+["xesha","Xe'Sha","\u0417\u0435'\u0428\u0430","mage","chaos","magic",["magic_dps","execute"],["silence","physical"]],
+["lars","Lars","\u041b\u0430\u0440\u0441","mage","chaos","magic",["twins","water_mark","aoe"],["silence","anti_magic"]],
+["cornelius","Cornelius","\u041a\u043e\u0440\u043d\u0435\u043b\u0438\u0443\u0441","mage","honor","magic",["int_killer"],["physical"]],
+["kai","Kai","\u041a\u0430\u0439","mage","chaos","magic",["nature_dmg","magic_dps"],["silence","physical"]],
+["mojo","Mojo","\u041c\u043e\u0434\u0436\u043e","mage","nature","magic",["curse"],["physical","burst"]],
+["heidi","Heidi","\u0425\u0435\u0439\u0434\u0438","mage","mystery","magic",["anti_dodge"],["physical","burst"]],
+["folio","Folio","\u0424\u043e\u043b\u0438\u043e","mage","mystery","magic",["int_steal","aoe"],["physical","burst"]],
+["alvanor","Alvanor","\u0410\u043b\u044c\u0432\u0430\u043d\u043e\u0440","support","nature","magic",["mdef_buff","nature"],["physical"]],
+["fafnir","Fafnir","\u0424\u0430\u0444\u043d\u0438\u0440","support","honor","phys",["phys_buff","shield","honor"],["magic"]],
+["helios","Helios","\u0413\u0435\u043b\u0438\u043e\u0441","support","honor","magic",["anti_crit","reflect_crit"],["physical","displacement"]],
+["sebastian","Sebastian","\u0421\u0435\u0431\u0430\u0441\u0442\u044c\u044f\u043d","support","progress","phys",["crit_buff","anti_cc","progress"],["magic"]],
+["jet","Jet","\u0414\u0436\u0435\u0442","support","progress","phys",["crit_buff","armor_buff"],["magic","control"]],
+["nebula","Nebula","\u041d\u0435\u0431\u0443\u043b\u0430","support","progress","magic",["dmg_buff","cleanse"],["displacement","control"]],
+["amira","Amira","\u0410\u043c\u0438\u0440\u0430","support","mystery","magic",["anti_crit","gold_storm"],["physical"]],
+["celeste","Celeste","\u0421\u0435\u043b\u0435\u0441\u0442\u0430","support","mystery","magic",["heal_support","anti_heal"],["displacement","burst"]],
+["krista","Krista","\u041a\u0440\u0438\u0441\u0442\u0430","support","chaos","magic",["twins","water_mark","freeze"],["silence","anti_magic"]],
+["soleil","Soleil","\u0421\u043e\u043b\u0435\u0439","support","honor","magic",["halo","def_shred"],["displacement"]],
+["tempus","Tempus","\u0422\u0435\u043c\u043f\u0443\u0441","support","mystery","magic",["time_stop","debuff_extend"],["physical","burst"]],
+["miu","Miu","\u041c\u0438\u044e","support","mystery","magic",["mystery","shield_s"],["physical"]],
+["octavia","Octavia","\u041e\u043a\u0442\u0430\u0432\u0438\u044f","support","progress","phys",["dodge_buff","phys_buff"],["anti_dodge","magic"]],
+["phobos","Phobos","\u0424\u043e\u0431\u043e\u0441","control","eternity","magic",["fear","energy_control"],["physical"]],
+["faceless","Faceless","\u0411\u0435\u0437\u043b\u0438\u043a\u0438\u0439","control","eternity","magic",["copy_ult","displacement"],["burst"]],
+["arachne","Arachne","\u0410\u0440\u0430\u0445\u043d\u0430","control","progress","magic",["teleport","stun"],["burst"]],
+["judge","Judge","\u0414\u0436\u0430\u0434\u0436","control","progress","magic",["shield","stun","progress"],["displacement"]],
+["peppy","Peppy","\u041f\u0435\u043f\u043f\u0438","control","chaos","magic",["cleanse","chaos"],["physical"]],
+["lian","Lian","\u041b\u0438\u0430\u043d","control","mystery","magic",["charm","anti_dodge"],["physical","burst"]],
+["jorgen","Jorgen","\u0419\u043e\u0440\u0433\u0435\u043d","control","chaos","magic",["energy_steal","curse"],["physical","burst"]],
+["polaris","Polaris","\u041f\u043e\u043b\u044f\u0440\u0438\u0441","control","progress","magic",["stun","speed_buff","progress"],["physical"]],
+["andvari","Andvari","\u0410\u043d\u0434\u0432\u0430\u0440\u0438","control","mystery","phys",["anti_displacement","armor_buff"],["magic"]],
+["somna","Somna","\u0421\u043e\u043c\u043d\u0430","control","mystery","magic",["sleep","debuff"],["physical","burst"]],
+["thea","Thea","\u0422\u0435\u0430","healer","nature","magic",["heal","speed_buff"],["anti_heal"]],
+["markus","Markus","\u041c\u0430\u0440\u043a\u0443\u0441","healer","honor","magic",["heal","honor"],["anti_heal"]],
+["morrigan","Morrigan","\u041c\u043e\u0440\u0440\u0438\u0433\u0430\u043d","healer","eternity","magic",["anti_res","undead","summon"],["physical"]],
+["dorian","Dorian","\u0414\u043e\u0440\u0438\u0430\u043d","healer","chaos","magic",["vampirism_aura","heal"],["anti_heal","burst"]],
+["aidan","Aidan","\u0410\u0438\u0434\u0430\u043d","healer","chaos","magic",["resurrection","buff","fire_herald"],["anti_res"]],
+["maya","Maya","\u041c\u0430\u0439\u044f","healer","nature","magic",["heal","flower"],["anti_heal","burst"]],
+["guus","Guus","\u0413\u0443\u0443\u0441","healer","honor","magic",["heal","honor"],["anti_heal"]],
+["byrna","Byrna","\u0411\u0438\u0440\u043d\u0430","healer","nature","magic",["heal","max_hp_buff","spirit"],["anti_heal","burst"]],
+["martha","Martha","\u041c\u0430\u0440\u0442\u0430","healer","mystery","magic",["heal","speed_buff"],["anti_heal"]]
+];
+var H=RW.map(function(h){return{id:h[0],en:h[1],ru:h[2],role:h[3],fac:h[4],dmg:h[5],tags:h[6],cnt:h[7]};});
+
+var TM=[
+{n:"Yasmine Assassin",cl:"#ef4444",d:"Yasmine dives weakest, Sebastian crit+anti-CC, Jorgen steals energy, Martha speeds, Astaroth resurrects.",
+ sl:[{b:"astaroth",a:"galahad",w:"More dmg"},{b:"yasmine"},{b:"sebastian",a:"celeste",w:"Anti-heal"},{b:"jorgen",a:"phobos",w:"Fear"},{b:"martha",a:"dorian",w:"Vampirism"}]},
+{n:"Dodge Pressure",cl:"#22c55e",d:"Dante+Octavia give team dodge. Drayne executes+anti-res. Byrna scales HP. Polaris stuns.",
+ sl:[{b:"drayne",a:"keira",w:"AoE"},{b:"byrna",a:"martha",w:"Speed"},{b:"dante",a:"elmir",w:"Armor pen"},{b:"polaris",a:"jorgen",w:"Energy steal"},{b:"octavia",a:"nebula",w:"Dmg buff"}]},
+{n:"Progress Fortress",cl:"#3b82f6",d:"Julius shields+speeds all. Judge stuns. Folio steals INT. Isaac silences mages. Polaris stuns. Progress faction.",
+ sl:[{b:"julius",a:"astaroth",w:"Resurrect"},{b:"folio",a:"iris",w:"HP pierce"},{b:"isaac",a:"nebula",w:"Dmg buff"},{b:"judge",a:"arachne",w:"Teleport stun"},{b:"polaris",a:"sebastian",w:"Crit+anti-CC"}]},
+{n:"Satori Mages",cl:"#a855f7",d:"Electra HP-tank+mag buff. Satori explodes marks. Nebula buffs. Helios anti-crit. Thea heals+speeds.",
+ sl:[{b:"electra",a:"rufus",w:"Magic immune"},{b:"satori",a:"orion",w:"Pure magic DPS"},{b:"nebula",a:"celeste",w:"Anti-heal"},{b:"helios",a:"amira",w:"Gold storm"},{b:"thea",a:"byrna",w:"Max HP scale"}]}
+];
+
+var P={},sC="power",sD="desc",fR="all",fF="all",efR="all",efF="all",eP=[],ePw={},tCfg={};
+function ld(){try{var d=localStorage.getItem("hw4-p");if(d)P=JSON.parse(d);else P={yasmine:107000,drayne:94000,astaroth:51000,byrna:63000};}catch(e){P={yasmine:107000,drayne:94000};}}
+function sv(){try{localStorage.setItem("hw4-p",JSON.stringify(P));}catch(e){}}
+function fH(id){return H.find(function(x){return x.id===id;});}
+function fmt(n){return n?n.toLocaleString("en"):"\u2014";}
+
+function exprt(){var b=new Blob([JSON.stringify(P,null,2)],{type:"application/json"});var a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="herowars_"+new Date().toISOString().slice(0,10)+".json";a.click();}
+function imprt(inp){var f=inp.files[0];if(!f)return;var r=new FileReader();r.onload=function(e){try{P=JSON.parse(e.target.result);sv();rH();alert("Imported "+Object.keys(P).filter(function(k){return P[k]>0;}).length+" heroes!");}catch(err){alert("File error");}};r.readAsText(f);inp.value="";}
+
+function go(t){["heroes","teams","counter","dict"].forEach(function(x){document.getElementById("t-"+x).className=x===t?"":"hd";});
+  document.querySelectorAll(".tb").forEach(function(b){b.className="tb"+(b.dataset.t===t?" on":"");});
+  if(t==="heroes")rH();if(t==="teams")rT();if(t==="counter"){rE();rC();}if(t==="dict")rD();}
 
 function bF(){
-  var r='<button class="fbtn on" onclick="fR=\'all\';uF();rH()">Все роли</button>';
-  for(var k in RL)r+='<button class="fbtn" data-r="'+k+'" onclick="tgF(\'r\',\''+k+'\')">'+RL[k].i+" "+RL[k].l+'</button>';
-  document.getElementById("rf").innerHTML=r;
-  var f='<button class="fbtn on" onclick="fF=\'all\';uF();rH()">Все фракции</button>';
-  for(var k in FL)f+='<button class="fbtn" data-f="'+k+'" onclick="tgF(\'f\',\''+k+'\')">'+FL[k].l+'</button>';
-  document.getElementById("ff").innerHTML=f;
-  var s='';
-  [["name","Имя"],["power","Мощность"],["role","Роль"],["faction","Фракция"]].forEach(function(x){
-    s+='<button class="fbtn" data-s="'+x[0]+'" onclick="tgS(\''+x[0]+'\')">'+x[1]+'</button>';
-  });
-  document.getElementById("sf").innerHTML=s;
-  var er='<button class="fbtn on" onclick="efR=\'all\';uEF();rE()">Все</button>';
-  for(var k in RL)er+='<button class="fbtn" data-er="'+k+'" onclick="tgEF(\'r\',\''+k+'\')">'+RL[k].i+" "+RL[k].l+'</button>';
-  document.getElementById("erf").innerHTML=er;
-  var ef='<button class="fbtn on" onclick="efF=\'all\';uEF();rE()">Все</button>';
-  for(var k in FL)ef+='<button class="fbtn" data-ef="'+k+'" onclick="tgEF(\'f\',\''+k+'\')">'+FL[k].l+'</button>';
-  document.getElementById("eff").innerHTML=ef;
+  var s='<button class="fb on" onclick="fR=\'all\';uF();rH()">All Roles</button>';for(var k in RL)s+='<button class="fb" data-r="'+k+'" onclick="tF(\'r\',\''+k+'\')">'+RL[k].i+" "+RL[k].l+"</button>";document.getElementById("rf").innerHTML=s;
+  s='<button class="fb on" onclick="fF=\'all\';uF();rH()">All Factions</button>';for(var k in FL)s+='<button class="fb" data-f="'+k+'" onclick="tF(\'f\',\''+k+'\')">'+FL[k].l+"</button>";document.getElementById("ff").innerHTML=s;
+  s="";[["name","Name"],["power","Power"],["role","Role"],["faction","Faction"]].forEach(function(x){s+='<button class="fb" data-s="'+x[0]+'" onclick="tS(\''+x[0]+'\')">'+x[1]+"</button>";});document.getElementById("sf").innerHTML=s;
+  s='<button class="fb on" onclick="efR=\'all\';uEF();rE()">All</button>';for(var k in RL)s+='<button class="fb" data-er="'+k+'" onclick="tEF(\'r\',\''+k+'\')">'+RL[k].i+" "+RL[k].l+"</button>";document.getElementById("erf").innerHTML=s;
+  s='<button class="fb on" onclick="efF=\'all\';uEF();rE()">All</button>';for(var k in FL)s+='<button class="fb" data-ef="'+k+'" onclick="tEF(\'f\',\''+k+'\')">'+FL[k].l+"</button>";document.getElementById("eff").innerHTML=s;
   uF();uEF();
 }
+function uF(){document.querySelectorAll("#rf .fb").forEach(function(b){var v=b.dataset.r;b.className="fb"+((!v&&fR==="all")||(v===fR)?" on":"");if(v&&RL[v])b.style.cssText=fR===v?"border-color:"+RL[v].c+";color:"+RL[v].c:"";});document.querySelectorAll("#ff .fb").forEach(function(b){var v=b.dataset.f;b.className="fb"+((!v&&fF==="all")||(v===fF)?" on":"");if(v&&FL[v])b.style.cssText=fF===v?"border-color:"+FL[v].c+";color:"+FL[v].c:"";});var nm={name:"Name",power:"Power",role:"Role",faction:"Faction"};document.querySelectorAll("#sf .fb").forEach(function(b){var v=b.dataset.s;b.className="fb"+(v===sC?" on":"");b.style.cssText=v===sC?"border-color:#60a5fa;color:#60a5fa":"";b.textContent=nm[v]+(v===sC?(sD==="desc"?" \u2193":" \u2191"):"");});}
+function tF(t,v){if(t==="r")fR=fR===v?"all":v;else fF=fF===v?"all":v;uF();rH();}
+function tS(c){if(sC===c)sD=sD==="desc"?"asc":"desc";else{sC=c;sD="desc";}uF();rH();}
+function uEF(){document.querySelectorAll("#erf .fb").forEach(function(b){var v=b.dataset.er;b.className="fb"+((!v&&efR==="all")||(v===efR)?" on":"");if(v&&RL[v])b.style.cssText=efR===v?"border-color:"+RL[v].c+";color:"+RL[v].c:"";});document.querySelectorAll("#eff .fb").forEach(function(b){var v=b.dataset.ef;b.className="fb"+((!v&&efF==="all")||(v===efF)?" on":"");if(v&&FL[v])b.style.cssText=efF===v?"border-color:"+FL[v].c+";color:"+FL[v].c:"";});}
+function tEF(t,v){if(t==="r")efR=efR===v?"all":v;else efF=efF===v?"all":v;uEF();rE();}
 
-function uF(){
-  document.querySelectorAll("#rf .fbtn").forEach(function(b){var v=b.dataset.r;b.className="fbtn"+((!v&&fR==="all")||(v===fR)?" on":"");if(v&&RL[v])b.style.cssText=fR===v?"border-color:"+RL[v].c+";color:"+RL[v].c:"";});
-  document.querySelectorAll("#ff .fbtn").forEach(function(b){var v=b.dataset.f;b.className="fbtn"+((!v&&fF==="all")||(v===fF)?" on":"");if(v&&FL[v])b.style.cssText=fF===v?"border-color:"+FL[v].c+";color:"+FL[v].c:"";});
-  var nm={name:"Имя",power:"Мощность",role:"Роль",faction:"Фракция"};
-  document.querySelectorAll("#sf .fbtn").forEach(function(b){var v=b.dataset.s;b.className="fbtn"+(v===sC?" on":"");b.style.cssText=v===sC?"border-color:#60a5fa;color:#60a5fa":"";b.textContent=nm[v]+(v===sC?(sD==="desc"?" \u2193":" \u2191"):"");});
-}
-function tgF(t,v){if(t==="r")fR=fR===v?"all":v;else fF=fF===v?"all":v;uF();rH();}
-function tgS(c){if(sC===c)sD=sD==="desc"?"asc":"desc";else{sC=c;sD="desc";}uF();rH();}
-
+// ═══ HEROES ═══
 function rH(){
-  var q=(document.getElementById("hs").value||"").toLowerCase();
-  var l=H.slice();
-  if(fR!=="all")l=l.filter(function(h){return h.role===fR;});
-  if(fF!=="all")l=l.filter(function(h){return h.fac===fF;});
-  if(q)l=l.filter(function(h){return h.name.toLowerCase().indexOf(q)>=0;});
-  l.sort(function(a,b){var d=0;if(sC==="power")d=(P[b.id]||0)-(P[a.id]||0);else if(sC==="name")d=a.name.localeCompare(b.name,"ru");else if(sC==="role")d=a.role.localeCompare(b.role);else d=a.fac.localeCompare(b.fac);return sD==="desc"?d:-d;});
-  var s="";
-  l.forEach(function(h){var p=P[h.id]||0;var r=RL[h.role],f=FL[h.fac];var bw=Math.min(100,p/2000);var bc=p>100000?"#22c55e":p>50000?"#f59e0b":"#ef4444";
-    s+='<div class="hero-row" style="border-color:'+(p>0?r.c+"44":"#1e293b")+'">'
-    +'<span class="icon">'+r.i+'</span><span class="hname">'+h.name+'</span>'
-    +'<span class="badge" style="background:'+f.c+'22;color:'+f.c+'">'+f.l+'</span>'
-    +'<span class="badge" style="background:'+r.c+'22;color:'+r.c+'">'+r.l+'</span>'
-    +'<div class="ml-auto flex items-center gap4">'
-    +'<input type="number" class="power-input'+(p>0?" filled":"")+'" value="'+(p||"")+'" placeholder="0" onchange="sP(\''+h.id+'\',this.value)">'
-    +'<div class="bar-wrap"><div class="bar-inner" style="width:'+bw+'%;background:'+bc+'"></div></div></div></div>';
-  });
-  document.getElementById("hl").innerHTML=s;
+  var q=(document.getElementById("hs").value||"").toLowerCase();var l=H.slice();
+  if(fR!=="all")l=l.filter(function(h){return h.role===fR;});if(fF!=="all")l=l.filter(function(h){return h.fac===fF;});
+  if(q)l=l.filter(function(h){return h.en.toLowerCase().indexOf(q)>=0||h.ru.toLowerCase().indexOf(q)>=0;});
+  l.sort(function(a,b){var d=0;if(sC==="power")d=(P[b.id]||0)-(P[a.id]||0);else if(sC==="name")d=a.en.localeCompare(b.en);else if(sC==="role")d=a.role.localeCompare(b.role);else d=a.fac.localeCompare(b.fac);return sD==="desc"?d:-d;});
+  var s="";l.forEach(function(h){var p=P[h.id]||0;var r=RL[h.role],f=FL[h.fac];var bw=Math.min(100,p/2000);var bc=p>100000?"#22c55e":p>50000?"#f59e0b":"#ef4444";
+    s+='<div class="hr" style="border-color:'+(p>0?r.c+"44":"#1e293b")+'"><span style="font-size:13px;width:18px;text-align:center">'+r.i+'</span><span style="font-size:11px;font-weight:600;color:#fff;min-width:110px">'+h.en+'</span><span class="bg" style="background:'+f.c+'22;color:'+f.c+'">'+f.l+'</span><span class="bg" style="background:'+r.c+'22;color:'+r.c+'">'+r.l+'</span><div style="margin-left:auto;display:flex;align-items:center;gap:3px"><input type="number" class="pi'+(p>0?" ok":"")+'" value="'+(p||"")+'" placeholder="0" onchange="sP(\''+h.id+'\',this.value)"><div style="width:35px;height:4px;border-radius:2px;background:rgba(255,255,255,.06);overflow:hidden"><div style="height:100%;border-radius:2px;width:'+bw+'%;background:'+bc+'"></div></div></div></div>';
+  });document.getElementById("hl").innerHTML=s;
   var c=0;for(var k in P)if(P[k]>0)c++;document.getElementById("fc").textContent=c;
 }
 function sP(id,v){P[id]=parseInt(v)||0;sv();}
 
+// ═══ TEAMS ═══
+function gSl(ti,si){var s=TM[ti].sl[si];if(tCfg[ti]&&tCfg[ti][si]&&s.a)return s.a;return s.b;}
+function tSl(ti,si){if(!tCfg[ti])tCfg[ti]={};tCfg[ti][si]=!tCfg[ti][si];rT();}
 function rT(){
-  var s="",gt=0;
-  TM.forEach(function(t,ti){var tt=0;var hh="";
-    t.ids.forEach(function(id){var h=fH(id);if(!h)return;var p=P[id]||0;tt+=p;var r=RL[h.role],f=FL[h.fac];
-      hh+='<div class="team-hero" style="background:'+t.cl+'0d;border:1px solid '+t.cl+'33"><div style="font-size:16px">'+r.i+'</div><div style="font-size:11px;font-weight:700;color:#fff">'+h.name+'</div><div style="font-size:9px;color:'+f.c+'">'+f.l+'</div><div style="font-size:9px;color:'+r.c+'">'+r.l+'</div><div style="font-size:12px;font-weight:700;margin-top:1px;color:'+(p>0?"#22c55e":"#ef4444")+'">'+fmt(p)+'</div></div>';});
-    gt+=tt;var sc=tt>300000?"#22c55e":"#ef4444";
-    s+='<div class="card" style="border-color:'+t.cl+'44"><div class="flex items-center gap6 wrap-yes" style="margin-bottom:6px">'
-    +'<h3 style="font-size:15px;font-weight:800;color:'+t.cl+'">'+t.n+'</h3>'
-    +'<span style="background:'+sc+'22;color:'+sc+';padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700">\u03A3 '+fmt(tt)+'</span>'
-    +'<button class="alt-btn ml-auto" style="border-color:'+t.cl+'55;color:'+(oSw[ti]?t.cl:"#64748b")+';background:'+(oSw[ti]?t.cl+"22":"transparent")+'" onclick="oSw['+ti+']=!oSw['+ti+'];rT()">'+(!oSw[ti]?"Альт \uD83D\uDD04":"Скрыть")+'</button>'
-    +'</div><p style="font-size:11px;color:#64748b;margin-bottom:8px;line-height:1.5">'+t.d+'</p>'
-    +'<div class="flex gap5 wrap-yes">'+hh+'</div>';
-    if(oSw[ti]){s+='<div style="margin-top:8px">';t.sw.forEach(function(w){var fh=fH(w.f),th=fH(w.t);var tp=P[w.t]||0;
-      s+='<div class="swap-row" style="background:'+t.cl+'08;border:1px solid '+t.cl+'22"><strong style="color:#fca5a5">'+(fh?fh.name:w.f)+'</strong> \u2192 <strong style="color:#a7f3d0">'+(th?th.name:w.t)+'</strong> \u2014 <span style="color:#64748b">'+w.w+'</span>'+(tp>0?' <span style="color:#22c55e">('+fmt(tp)+')</span>':'')+'</div>';});s+='</div>';}
-    s+='</div>';
-  });
-  document.getElementById("tl").innerHTML=s;document.getElementById("tp").textContent=fmt(gt);
+  var s="";TM.forEach(function(t,ti){var ids=t.sl.map(function(_,si){return gSl(ti,si);});var tt=0;ids.forEach(function(id){tt+=(P[id]||0);});var sc=tt>300000?"#22c55e":"#ef4444";
+    s+='<div class="cd" style="border-color:'+t.cl+'44"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap"><h3 style="font-size:14px;font-weight:800;color:'+t.cl+'">'+t.n+'</h3><span style="background:'+sc+'22;color:'+sc+';padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700">\u03A3 '+fmt(tt)+'</span></div><p style="font-size:10px;color:#64748b;margin-bottom:8px;line-height:1.5">'+t.d+'</p><div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px">';
+    t.sl.forEach(function(sl,si){var id=gSl(ti,si);var h=fH(id);if(!h)return;var p=P[id]||0;var r=RL[h.role],f=FL[h.fac];var isA=tCfg[ti]&&tCfg[ti][si]&&sl.a;
+      s+='<div class="th" style="background:'+t.cl+'0d;border:1px solid '+(isA?"#22c55e55":t.cl+"33")+'"><div style="font-size:15px">'+r.i+'</div><div style="font-size:10px;font-weight:700;color:'+(isA?"#a7f3d0":"#fff")+'">'+h.en+'</div><div style="font-size:8px;color:'+f.c+'">'+f.l+'</div><div style="font-size:8px;color:'+r.c+'">'+r.l+'</div><div style="font-size:11px;font-weight:700;margin-top:1px;color:'+(p>0?"#22c55e":"#ef4444")+'">'+fmt(p)+'</div></div>';});
+    s+='</div><div style="display:flex;flex-wrap:wrap;gap:2px">';
+    t.sl.forEach(function(sl,si){if(!sl.a)return;var isA=tCfg[ti]&&tCfg[ti][si];var from=fH(isA?sl.a:sl.b);var to=fH(isA?sl.b:sl.a);
+      s+='<button class="sw-btn" style="border-color:'+t.cl+'55;color:'+(isA?"#a7f3d0":"#94a3b8")+'" onclick="tSl('+ti+','+si+')"><span style="color:#fca5a5">'+from.en+'</span> \u2192 <span style="color:#a7f3d0">'+to.en+'</span> <span style="font-size:8px;color:#64748b">('+sl.w+')</span></button>';});
+    s+='</div></div>';});
+  document.getElementById("tl").innerHTML=s;
 }
 
-function uEF(){
-  document.querySelectorAll("#erf .fbtn").forEach(function(b){var v=b.dataset.er;b.className="fbtn"+((!v&&efR==="all")||(v===efR)?" on":"");if(v&&RL[v])b.style.cssText=efR===v?"border-color:"+RL[v].c+";color:"+RL[v].c:"";});
-  document.querySelectorAll("#eff .fbtn").forEach(function(b){var v=b.dataset.ef;b.className="fbtn"+((!v&&efF==="all")||(v===efF)?" on":"");if(v&&FL[v])b.style.cssText=efF===v?"border-color:"+FL[v].c+";color:"+FL[v].c:"";});
-}
-function tgEF(t,v){if(t==="r")efR=efR===v?"all":v;else efF=efF===v?"all":v;uEF();rE();}
-function tgE(id){var i=enemyPicks.indexOf(id);if(i>=0)enemyPicks.splice(i,1);else if(enemyPicks.length<5)enemyPicks.push(id);rE();}
+// ═══ COUNTER ═══
+function tgE(id){var i=eP.indexOf(id);if(i>=0){eP.splice(i,1);delete ePw[id];}else if(eP.length<5)eP.push(id);rE();}
+function setEPw(id,v){ePw[id]=parseInt(v)||0;rC();}
 
 function rE(){
-  var q=(document.getElementById("es").value||"").toLowerCase();
-  var l=H.slice();
-  if(efR!=="all")l=l.filter(function(h){return h.role===efR;});
-  if(efF!=="all")l=l.filter(function(h){return h.fac===efF;});
-  if(q)l=l.filter(function(h){return h.name.toLowerCase().indexOf(q)>=0;});
-  var s="";
-  l.forEach(function(h){var sel=enemyPicks.indexOf(h.id)>=0;var dis=!sel&&enemyPicks.length>=5;
-    s+='<button class="enemy-btn'+(sel?" sel":"")+(dis?" dis":"")+'" onclick="tgE(\''+h.id+'\')">'+RL[h.role].i+" "+h.name+'</button>';});
+  var q=(document.getElementById("es").value||"").toLowerCase();var l=H.slice();
+  if(efR!=="all")l=l.filter(function(h){return h.role===efR;});if(efF!=="all")l=l.filter(function(h){return h.fac===efF;});
+  if(q)l=l.filter(function(h){return h.en.toLowerCase().indexOf(q)>=0||h.ru.toLowerCase().indexOf(q)>=0;});
+  var s="";l.forEach(function(h){var sel=eP.indexOf(h.id)>=0;var dis=!sel&&eP.length>=5;
+    s+='<button class="eb'+(sel?" sel":"")+(dis?" dis":"")+'" onclick="tgE(\''+h.id+'\')">'+RL[h.role].i+" "+h.en+"</button>";});
   document.getElementById("ep").innerHTML=s;
-  s="";enemyPicks.forEach(function(id){var h=fH(id);if(!h)return;s+='<span class="picked-tag" onclick="tgE(\''+id+'\')">'+RL[h.role].i+" "+h.name+' x</span>';});
+  s="";eP.forEach(function(id){var h=fH(id);if(!h)return;var pw=ePw[id]||0;
+    s+='<span class="pt" onclick="tgE(\''+id+'\')">'+RL[h.role].i+" "+h.en+' \u00D7</span> <input type="number" class="epi'+(pw>0?" ok":"")+'" value="'+(pw||"")+'" placeholder="pwr" onchange="setEPw(\''+id+'\',this.value)"> ';});
   document.getElementById("epk").innerHTML=s;
-  document.getElementById("ec").textContent=enemyPicks.length;
-  rC();
+  document.getElementById("ec").textContent=eP.length;rC();
 }
 
-function cS(hero,enemies){var s=0;for(var i=0;i<enemies.length;i++){var e=enemies[i];for(var j=0;j<hero.cnt.length;j++){if(e.tags.indexOf(hero.cnt[j])>=0)s+=2;}for(var k=0;k<hero.tags.length;k++){if(e.cnt.indexOf(hero.tags[k])>=0)s+=1.5;}if(hero.dmg==="magic"&&e.dmg==="phys")s+=0.3;if(hero.dmg==="phys"&&e.dmg==="magic")s+=0.3;}return s;}
+function cSc(hero,en){var s=0;for(var i=0;i<en.length;i++){var e=en[i];for(var j=0;j<hero.cnt.length;j++){if(e.tags.indexOf(hero.cnt[j])>=0)s+=2;}for(var k=0;k<hero.tags.length;k++){if(e.cnt.indexOf(hero.tags[k])>=0)s+=1.5;}if(hero.dmg==="magic"&&e.dmg==="phys")s+=.3;if(hero.dmg==="phys"&&e.dmg==="magic")s+=.3;}return s;}
 
-function bCT(){
-  var en=enemyPicks.map(fH).filter(Boolean);
-  var av=H.filter(function(h){return enemyPicks.indexOf(h.id)<0;});
-  var sc=av.map(function(h){var r=cS(h,en);var p=P[h.id]||0;var m=p>0?p/100000:0.01;return{id:h.id,name:h.name,role:h.role,fac:h.fac,dmg:h.dmg,tags:h.tags,cnt:h.cnt,raw:r,pwr:p,fin:r*m};});
+function bTeam(en,usePower){
+  var av=H.filter(function(h){return eP.indexOf(h.id)<0;});
+  var sc=av.map(function(h){var r=cSc(h,en);var p=P[h.id]||0;var m=usePower?(p>0?p/100000:.01):1;return{id:h.id,en:h.en,role:h.role,fac:h.fac,dmg:h.dmg,tags:h.tags,cnt:h.cnt,raw:r,pwr:p,fin:r*m};});
   var sa=sc.slice().sort(function(a,b){return b.fin-a.fin;});
   var tk=sc.filter(function(h){return h.role==="tank";}).sort(function(a,b){return b.fin-a.fin;});
   var hl=sc.filter(function(h){return h.role==="healer";}).sort(function(a,b){return b.fin-a.fin;});
@@ -267,20 +281,45 @@ function bCT(){
   return tm;
 }
 
-function rC(){
-  var el=document.getElementById("cr");
-  if(enemyPicks.length<5){el.innerHTML=enemyPicks.length===0?'<div style="text-align:center;padding:24px;color:#64748b;font-size:12px">Выбери 5 вражеских героев</div>':'<div style="text-align:center;padding:16px;color:#64748b;font-size:12px">Ещё '+(5-enemyPicks.length)+'</div>';return;}
-  var tm=bCT();var tp=0,tr=0,tf=0;tm.forEach(function(h){tp+=h.pwr;tr+=h.raw;tf+=h.fin;});
-  var s='<div class="card" style="border-color:rgba(34,197,94,0.3)"><h3 style="font-size:14px;font-weight:700;color:#22c55e;margin-bottom:8px">Контрпик \u2014 \u03A3 '+fmt(tp)+'</h3><div class="flex gap5 wrap-yes" style="margin-bottom:10px">';
+function renderTeam(tm,color,label){
+  var tp=0;tm.forEach(function(h){tp+=h.pwr;});
+  var s='<div class="ct-section" style="border-color:'+color+'44"><h4 style="font-size:12px;font-weight:700;color:'+color+';margin-bottom:8px">'+label+' \u2014 \u03A3 '+fmt(tp)+'</h4><div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px">';
   tm.forEach(function(h){var r=RL[h.role],f=FL[h.fac];
-    s+='<div class="counter-hero"><div style="font-size:18px">'+r.i+'</div><div style="font-size:12px;font-weight:700;color:#fff">'+h.name+'</div><div style="font-size:9px;color:'+f.c+'">'+f.l+'</div><div style="font-size:12px;font-weight:700;margin-top:2px;color:'+(h.pwr>0?"#a7f3d0":"#ef4444")+'">'+fmt(h.pwr)+'</div><div style="font-size:9px;color:#94a3b8">Score: '+h.fin.toFixed(1)+'</div></div>';});
-  s+='</div><div style="font-size:11px;color:#94a3b8;margin-bottom:6px">Counter: '+tr.toFixed(1)+' | Final: '+tf.toFixed(1)+'</div>';
-  tm.forEach(function(h){var mt=[];enemyPicks.forEach(function(eid){var ed=fH(eid);if(!ed)return;var m1=h.cnt.filter(function(c){return ed.tags.indexOf(c)>=0;});var m2=h.tags.filter(function(t){return ed.cnt.indexOf(t)>=0;});if(m1.length||m2.length)mt.push(ed.name);});
-    s+='<div style="font-size:10px;color:#cbd5e1;padding:2px 0"><strong style="color:'+RL[h.role].c+'">'+h.name+'</strong>'+(mt.length>0?' \u2192 контрит: '+mt.join(', '):' \u2192 роль '+RL[h.role].l)+'</div>';});
-  s+='</div>';el.innerHTML=s;
+    s+='<div class="ch" style="background:'+color+'0a;border:1px solid '+color+'33"><div style="font-size:16px">'+r.i+'</div><div style="font-size:11px;font-weight:700;color:#fff">'+h.en+'</div><div style="font-size:8px;color:'+f.c+'">'+f.l+'</div><div style="font-size:11px;font-weight:700;margin-top:2px;color:'+(h.pwr>0?"#a7f3d0":"#64748b")+'">'+fmt(h.pwr)+'</div><div style="font-size:8px;color:#94a3b8">'+h.fin.toFixed(1)+'</div></div>';});
+  s+='</div>';
+  tm.forEach(function(h){var mt=[];eP.forEach(function(eid){var ed=fH(eid);if(!ed)return;var m1=h.cnt.filter(function(c){return ed.tags.indexOf(c)>=0;});var m2=h.tags.filter(function(t){return ed.cnt.indexOf(t)>=0;});if(m1.length||m2.length)mt.push(ed.en);});
+    s+='<div style="font-size:9px;color:#cbd5e1;padding:1px 0"><strong style="color:'+RL[h.role].c+'">'+h.en+'</strong>'+(mt.length>0?' \u2192 counters: '+mt.join(", "):' \u2192 fills '+RL[h.role].l+' role')+'</div>';});
+  s+='</div>';return s;
 }
 
-ld();bF();rH();
+function rC(){
+  var el=document.getElementById("cr");
+  if(eP.length<5){el.innerHTML=eP.length===0?'<div style="text-align:center;padding:24px;color:#64748b;font-size:12px">Select 5 enemy heroes above</div>':'<div style="text-align:center;padding:16px;color:#64748b;font-size:12px">'+(5-eP.length)+' more needed</div>';return;}
+  var en=eP.map(fH).filter(Boolean);
+  var ePwTotal=0;eP.forEach(function(id){ePwTotal+=(ePw[id]||0);});
+  // Enemy summary
+  var s='<div style="background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:10px;padding:8px;margin-bottom:10px;font-size:11px;color:#fca5a5"><strong>Enemy:</strong> '+eP.map(function(id){var h=fH(id);var pw=ePw[id];return h.en+(pw>0?" ("+fmt(pw)+")":"");}).join(" \u2022 ")+(ePwTotal>0?" \u2014 \u03A3 "+fmt(ePwTotal):"")+'</div>';
+  // Ideal counter (no power weight)
+  var ideal=bTeam(en,false);
+  s+=renderTeam(ideal,"#f59e0b","\u2B50 Ideal Counter (best synergy, ignoring your power)");
+  // Your best counter (weighted by power)
+  var yours=bTeam(en,true);
+  s+=renderTeam(yours,"#22c55e","\uD83D\uDCAA Your Best Counter (weighted by your hero power)");
+  el.innerHTML=s;
+}
+
+// ═══ DICTIONARY ═══
+function rD(){
+  var q=(document.getElementById("ds").value||"").toLowerCase();
+  var l=H.slice().sort(function(a,b){return a.en.localeCompare(b.en);});
+  if(q)l=l.filter(function(h){return h.en.toLowerCase().indexOf(q)>=0||h.ru.toLowerCase().indexOf(q)>=0;});
+  var s='<div style="display:flex;padding:4px 8px;font-size:10px;font-weight:700;color:#64748b;border-bottom:1px solid #334155"><span style="flex:1">English</span><span style="flex:1">Russian (\u0420\u0443\u0441\u0441\u043a\u0438\u0439)</span><span style="width:70px">Role</span><span style="width:70px">Faction</span></div>';
+  l.forEach(function(h){var r=RL[h.role],f=FL[h.fac];
+    s+='<div class="dict-row"><span style="flex:1;color:#fff;font-weight:600">'+h.en+'</span><span style="flex:1;color:#94a3b8">'+h.ru+'</span><span style="width:70px"><span class="bg" style="background:'+r.c+'22;color:'+r.c+'">'+r.i+" "+r.l+'</span></span><span style="width:70px"><span class="bg" style="background:'+f.c+'22;color:'+f.c+'">'+f.l+'</span></span></div>';});
+  document.getElementById("dl").innerHTML=s;
+}
+
+ld();TM.forEach(function(_,i){tCfg[i]={};});bF();rH();
 </script>
 </body>
 </html>
