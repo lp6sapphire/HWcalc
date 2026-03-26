@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hero Wars: Team Calculator</title>
+<title>Hero Wars: Team Calculator v5</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:linear-gradient(135deg,#0a0a1a,#111133,#0a0a1a);color:#e2e8f0;min-height:100vh}
@@ -17,10 +17,10 @@ h1{font-size:20px;font-weight:800;text-align:center;background:linear-gradient(9
 .fb{padding:3px 8px;border-radius:7px;font-size:10px;cursor:pointer;border:1px solid #1e293b;background:transparent;color:#64748b;font-weight:400}
 .fb.on{font-weight:700}
 .si{width:100%;padding:6px 10px;border-radius:8px;border:1px solid #1e293b;background:rgba(25,25,60,.9);color:#fff;font-size:12px;margin-bottom:8px}
-.hr{display:flex;align-items:center;gap:5px;padding:4px 7px;background:rgba(12,12,40,.9);border-radius:7px;border:1px solid #1e293b;margin-bottom:2px}
+.hr{display:flex;align-items:center;gap:5px;padding:4px 7px;background:rgba(12,12,40,.9);border-radius:7px;border:1px solid #1e293b;margin-bottom:2px;transition:border-color .2s}
 .bg{font-size:8px;padding:1px 5px;border-radius:6px;font-weight:600;white-space:nowrap}
-.pi{width:70px;padding:2px 5px;border-radius:5px;border:1px solid #1e293b;background:rgba(25,25,60,.9);color:#64748b;font-size:11px;text-align:right}
-.pi.ok{color:#fff}
+.pi{width:80px;padding:3px 6px;border-radius:5px;border:1px solid #1e293b;background:rgba(25,25,60,.9);color:#fff;font-size:12px;text-align:right;transition:border-color .2s}
+.pi:focus{border-color:#f59e0b;outline:none}
 .cd{background:rgba(12,12,40,.9);border-radius:12px;padding:12px;border:1px solid #1e293b;margin-bottom:10px}
 .th{flex:1 1 75px;border-radius:9px;padding:6px 3px;text-align:center}
 .sw-btn{font-size:9px;padding:3px 8px;border-radius:6px;cursor:pointer;font-weight:600;border:1px solid;display:inline-flex;align-items:center;gap:3px;margin:2px;background:transparent}
@@ -40,29 +40,31 @@ h1{font-size:20px;font-weight:800;text-align:center;background:linear-gradient(9
 .ct-section{border:1px solid;border-radius:10px;padding:12px;margin-bottom:10px}
 .dict-row{display:flex;padding:4px 8px;border-bottom:1px solid #1e293b;font-size:12px;align-items:center;gap:8px}
 .dict-row:nth-child(even){background:rgba(255,255,255,.02)}
-.epi{width:60px;padding:2px 4px;border-radius:4px;border:1px solid #1e293b;background:rgba(25,25,60,.9);color:#64748b;font-size:10px;text-align:right}
-.epi.ok{color:#fca5a5}
+.epi{width:65px;padding:2px 4px;border-radius:4px;border:1px solid #1e293b;background:rgba(25,25,60,.9);color:#fca5a5;font-size:10px;text-align:right;margin-left:2px}
+.bar-w{width:40px;height:5px;border-radius:3px;background:rgba(255,255,255,.06);overflow:hidden;flex-shrink:0}
+.bar-i{height:100%;border-radius:3px;transition:width .3s,background .3s}
 </style>
 </head>
 <body>
 <div class="w">
 <h1>Hero Wars: Team Calculator</h1>
-<p class="sub">79 Heroes &bull; 6 Factions &bull; 7 Roles &bull; Counter-pick Engine &bull; Export/Import</p>
+<p class="sub">79 Heroes &bull; 6 Factions &bull; 7 Roles &bull; Counter Engine &bull; Export/Import</p>
 <div class="tabs">
 <button class="tb on" data-t="heroes" onclick="go('heroes')">Heroes (<span id="fc">0</span>/79)</button>
 <button class="tb" data-t="teams" onclick="go('teams')">Meta Teams</button>
 <button class="tb" data-t="counter" onclick="go('counter')">Counter-Pick</button>
-<button class="tb" data-t="dict" onclick="go('dict')">EN/RU</button>
+<button class="tb" data-t="dict" onclick="go('dict')">EN / RU</button>
 </div>
 
 <div id="t-heroes">
 <div class="io-bar">
-<button class="io-btn" onclick="exprt()">📥 Export</button>
-<button class="io-btn" onclick="document.getElementById('imp-f').click()">📤 Import</button>
-<input type="file" id="imp-f" accept=".json" style="display:none" onchange="imprt(this)">
-<span style="font-size:10px;color:#64748b">Auto-saved in browser</span>
+<button class="io-btn" onclick="doExport()">📥 Export JSON</button>
+<button class="io-btn" onclick="document.getElementById('imp-f').click()">📤 Import JSON</button>
+<button class="io-btn" onclick="if(confirm('Reset all powers to 0?')){P={};sv();rH();}" style="color:#ef4444">🗑 Reset</button>
+<input type="file" id="imp-f" accept=".json" style="display:none" onchange="doImport(this)">
+<span style="font-size:10px;color:#64748b;margin-left:auto">Auto-saved in browser</span>
 </div>
-<input class="si" id="hs" placeholder="Search hero..." oninput="rH()">
+<input class="si" id="hs" placeholder="Search hero (EN or RU)..." oninput="rH()">
 <div class="fl" id="rf"></div>
 <div class="fl" id="ff"></div>
 <div class="fl" id="sf"></div>
@@ -70,22 +72,22 @@ h1{font-size:20px;font-weight:800;text-align:center;background:linear-gradient(9
 </div>
 
 <div id="t-teams" class="hd">
-<div class="ib"><strong>Meta teams 2026.</strong> Heroes may overlap — pick 3 non-overlapping for Grand Arena. Click swap buttons to switch heroes.</div>
+<div class="ib"><strong>Meta Teams 2026.</strong> Heroes may overlap between teams. Pick 3 non-overlapping for Grand Arena. Click swap buttons to switch heroes — power recalculates.</div>
 <div id="tl"></div>
 </div>
 
 <div id="t-counter" class="hd">
-<div class="fmb"><strong>Formula:</strong> counterScore = &sum;(my counters &cap; enemy tags)&times;2 + &sum;(my tags &cap; enemy weaknesses)&times;1.5 + dmg type bonus&times;0.3<br>
-finalScore = counterScore &times; (power / 100k). Guaranteed: 1 tank + 1 healer + 3 best scorers.<br>
-<strong>Ideal Pick</strong> = best counter ignoring your power. <strong>Your Best Pick</strong> = weighted by your heroes' power.</div>
+<div class="fmb"><strong>Formula:</strong> counterScore = &sum;(my counters &cap; enemy tags)&times;2 + &sum;(my tags &cap; enemy weaknesses)&times;1.5 + dmg type&times;0.3<br>
+finalScore = counterScore &times; (power / 100k).<br>
+<strong>⭐ Ideal</strong> = pure counter synergy, ignoring power. <strong>💪 Your Best</strong> = weighted by your heroes' power.</div>
 <div style="font-size:13px;font-weight:700;color:#ef4444;margin-bottom:8px">Enemy Team (<span id="ec">0</span>/5)
-<button onclick="eP=[];rE()" style="margin-left:8px;font-size:10px;color:#64748b;background:transparent;border:1px solid #1e293b;border-radius:6px;padding:2px 8px;cursor:pointer">Reset</button></div>
-<input class="si" id="es" placeholder="Search enemy..." oninput="rE()">
+<button onclick="eP=[];ePw={};rE()" style="margin-left:8px;font-size:10px;color:#64748b;background:transparent;border:1px solid #1e293b;border-radius:6px;padding:2px 8px;cursor:pointer">Reset</button></div>
+<input class="si" id="es" placeholder="Search enemy (EN/RU)..." oninput="rE()">
 <div class="fl" id="erf"></div>
 <div class="fl" id="eff"></div>
-<p style="font-size:10px;color:#475569;margin-bottom:4px">Click hero to add/remove. Optionally enter enemy power:</p>
+<p style="font-size:10px;color:#475569;margin-bottom:4px">Click to add/remove. Power field is optional:</p>
 <div class="ep-wrap" id="ep"></div>
-<div id="epk" style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px"></div>
+<div id="epk" style="margin-bottom:8px"></div>
 <div id="cr"></div>
 </div>
 
@@ -98,8 +100,6 @@ finalScore = counterScore &times; (power / 100k). Guaranteed: 1 tank + 1 healer 
 <script>
 var RL={tank:{l:"Tank",i:"\uD83D\uDEE1",c:"#ef4444"},warrior:{l:"Warrior",i:"\u2694\uFE0F",c:"#f59e0b"},marksman:{l:"Marksman",i:"\uD83C\uDFF9",c:"#22c55e"},mage:{l:"Mage",i:"\uD83D\uDD2E",c:"#8b5cf6"},support:{l:"Support",i:"\u2728",c:"#06b6d4"},control:{l:"Control",i:"\uD83C\uDFAD",c:"#e879f9"},healer:{l:"Healer",i:"\uD83D\uDC9A",c:"#ec4899"}};
 var FL={eternity:{l:"Eternity",c:"#a855f7"},nature:{l:"Nature",c:"#22c55e"},chaos:{l:"Chaos",c:"#ef4444"},progress:{l:"Progress",c:"#3b82f6"},mystery:{l:"Mystery",c:"#c084fc"},honor:{l:"Honor",c:"#f59e0b"}};
-
-// [id, EN name, RU name, role, faction, dmg, tags[], counters[]]
 var RW=[
 ["astaroth","Astaroth","\u0410\u0441\u0442\u0430\u0440\u043e\u0442","tank","chaos","phys",["resurrection","shield"],["summon","magic"]],
 ["aurora","Aurora","\u0410\u0432\u0440\u043e\u0440\u0430","tank","nature","phys",["dodge","reflect"],["magic","anti_dodge"]],
@@ -182,34 +182,48 @@ var RW=[
 ["martha","Martha","\u041c\u0430\u0440\u0442\u0430","healer","mystery","magic",["heal","speed_buff"],["anti_heal"]]
 ];
 var H=RW.map(function(h){return{id:h[0],en:h[1],ru:h[2],role:h[3],fac:h[4],dmg:h[5],tags:h[6],cnt:h[7]};});
-
 var TM=[
-{n:"Yasmine Assassin",cl:"#ef4444",d:"Yasmine dives weakest, Sebastian crit+anti-CC, Jorgen steals energy, Martha speeds, Astaroth resurrects.",
+{n:"Yasmine Assassin",cl:"#ef4444",d:"Yasmine dives weakest. Sebastian crit+anti-CC. Jorgen steals energy. Martha speeds. Astaroth res.",
  sl:[{b:"astaroth",a:"galahad",w:"More dmg"},{b:"yasmine"},{b:"sebastian",a:"celeste",w:"Anti-heal"},{b:"jorgen",a:"phobos",w:"Fear"},{b:"martha",a:"dorian",w:"Vampirism"}]},
-{n:"Dodge Pressure",cl:"#22c55e",d:"Dante+Octavia give team dodge. Drayne executes+anti-res. Byrna scales HP. Polaris stuns.",
+{n:"Dodge Pressure",cl:"#22c55e",d:"Dante+Octavia team dodge. Drayne executes+blocks res. Byrna scales HP. Polaris stuns.",
  sl:[{b:"drayne",a:"keira",w:"AoE"},{b:"byrna",a:"martha",w:"Speed"},{b:"dante",a:"elmir",w:"Armor pen"},{b:"polaris",a:"jorgen",w:"Energy steal"},{b:"octavia",a:"nebula",w:"Dmg buff"}]},
-{n:"Progress Fortress",cl:"#3b82f6",d:"Julius shields+speeds all. Judge stuns. Folio steals INT. Isaac silences mages. Polaris stuns. Progress faction.",
- sl:[{b:"julius",a:"astaroth",w:"Resurrect"},{b:"folio",a:"iris",w:"HP pierce"},{b:"isaac",a:"nebula",w:"Dmg buff"},{b:"judge",a:"arachne",w:"Teleport stun"},{b:"polaris",a:"sebastian",w:"Crit+anti-CC"}]},
-{n:"Satori Mages",cl:"#a855f7",d:"Electra HP-tank+mag buff. Satori explodes marks. Nebula buffs. Helios anti-crit. Thea heals+speeds.",
- sl:[{b:"electra",a:"rufus",w:"Magic immune"},{b:"satori",a:"orion",w:"Pure magic DPS"},{b:"nebula",a:"celeste",w:"Anti-heal"},{b:"helios",a:"amira",w:"Gold storm"},{b:"thea",a:"byrna",w:"Max HP scale"}]}
+{n:"Progress Fortress",cl:"#3b82f6",d:"Julius shields+speed. Judge stuns. Folio steals INT. Isaac silences. Polaris stuns. Full Progress.",
+ sl:[{b:"julius",a:"astaroth",w:"Resurrect"},{b:"folio",a:"iris",w:"HP pierce"},{b:"isaac",a:"nebula",w:"Dmg buff"},{b:"judge",a:"arachne",w:"TP stun"},{b:"polaris",a:"sebastian",w:"Crit"}]},
+{n:"Satori Mages",cl:"#a855f7",d:"Electra HP-tank+mag buff. Satori mark explosion. Nebula buffs. Helios anti-crit. Thea heals.",
+ sl:[{b:"electra",a:"rufus",w:"Magic immune"},{b:"satori",a:"orion",w:"Pure DPS"},{b:"nebula",a:"celeste",w:"Anti-heal"},{b:"helios",a:"amira",w:"Gold storm"},{b:"thea",a:"byrna",w:"Max HP"}]}
 ];
 
-var P={},sC="power",sD="desc",fR="all",fF="all",efR="all",efF="all",eP=[],ePw={},tCfg={};
-function ld(){try{var d=localStorage.getItem("hw4-p");if(d)P=JSON.parse(d);else P={yasmine:107000,drayne:94000,astaroth:51000,byrna:63000};}catch(e){P={yasmine:107000,drayne:94000};}}
-function sv(){try{localStorage.setItem("hw4-p",JSON.stringify(P));}catch(e){}}
+// ═══ STATE — no hardcoded powers ═══
+var P={};
+var sC="power",sD="desc",fR="all",fF="all";
+var efR="all",efF="all",eP=[],ePw={};
+var tCfg={};
+var saveTimer=null;
+
+function ld(){
+  try{var d=localStorage.getItem("hw5-p");if(d)P=JSON.parse(d);}catch(e){}
+  // No hardcoded defaults — start empty if nothing saved
+}
+function sv(){
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(function(){
+    try{localStorage.setItem("hw5-p",JSON.stringify(P));}catch(e){}
+  },300);
+}
 function fH(id){return H.find(function(x){return x.id===id;});}
 function fmt(n){return n?n.toLocaleString("en"):"\u2014";}
 
-function exprt(){var b=new Blob([JSON.stringify(P,null,2)],{type:"application/json"});var a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="herowars_"+new Date().toISOString().slice(0,10)+".json";a.click();}
-function imprt(inp){var f=inp.files[0];if(!f)return;var r=new FileReader();r.onload=function(e){try{P=JSON.parse(e.target.result);sv();rH();alert("Imported "+Object.keys(P).filter(function(k){return P[k]>0;}).length+" heroes!");}catch(err){alert("File error");}};r.readAsText(f);inp.value="";}
+function doExport(){var b=new Blob([JSON.stringify(P,null,2)],{type:"application/json"});var a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="herowars_"+new Date().toISOString().slice(0,10)+".json";a.click();}
+function doImport(inp){var f=inp.files[0];if(!f)return;var r=new FileReader();r.onload=function(e){try{P=JSON.parse(e.target.result);sv();rH();alert("Imported!");}catch(err){alert("Error");}};r.readAsText(f);inp.value="";}
 
 function go(t){["heroes","teams","counter","dict"].forEach(function(x){document.getElementById("t-"+x).className=x===t?"":"hd";});
   document.querySelectorAll(".tb").forEach(function(b){b.className="tb"+(b.dataset.t===t?" on":"");});
-  if(t==="heroes")rH();if(t==="teams")rT();if(t==="counter"){rE();rC();}if(t==="dict")rD();}
+  if(t==="heroes")rH();if(t==="teams")rT();if(t==="counter"){rE();}if(t==="dict")rD();}
 
+// ═══ FILTERS ═══
 function bF(){
-  var s='<button class="fb on" onclick="fR=\'all\';uF();rH()">All Roles</button>';for(var k in RL)s+='<button class="fb" data-r="'+k+'" onclick="tF(\'r\',\''+k+'\')">'+RL[k].i+" "+RL[k].l+"</button>";document.getElementById("rf").innerHTML=s;
-  s='<button class="fb on" onclick="fF=\'all\';uF();rH()">All Factions</button>';for(var k in FL)s+='<button class="fb" data-f="'+k+'" onclick="tF(\'f\',\''+k+'\')">'+FL[k].l+"</button>";document.getElementById("ff").innerHTML=s;
+  var s='<button class="fb on" onclick="fR=\'all\';uF();rH()">All</button>';for(var k in RL)s+='<button class="fb" data-r="'+k+'" onclick="tF(\'r\',\''+k+'\')">'+RL[k].i+" "+RL[k].l+"</button>";document.getElementById("rf").innerHTML=s;
+  s='<button class="fb on" onclick="fF=\'all\';uF();rH()">All</button>';for(var k in FL)s+='<button class="fb" data-f="'+k+'" onclick="tF(\'f\',\''+k+'\')">'+FL[k].l+"</button>";document.getElementById("ff").innerHTML=s;
   s="";[["name","Name"],["power","Power"],["role","Role"],["faction","Faction"]].forEach(function(x){s+='<button class="fb" data-s="'+x[0]+'" onclick="tS(\''+x[0]+'\')">'+x[1]+"</button>";});document.getElementById("sf").innerHTML=s;
   s='<button class="fb on" onclick="efR=\'all\';uEF();rE()">All</button>';for(var k in RL)s+='<button class="fb" data-er="'+k+'" onclick="tEF(\'r\',\''+k+'\')">'+RL[k].i+" "+RL[k].l+"</button>";document.getElementById("erf").innerHTML=s;
   s='<button class="fb on" onclick="efF=\'all\';uEF();rE()">All</button>';for(var k in FL)s+='<button class="fb" data-ef="'+k+'" onclick="tEF(\'f\',\''+k+'\')">'+FL[k].l+"</button>";document.getElementById("eff").innerHTML=s;
@@ -221,56 +235,136 @@ function tS(c){if(sC===c)sD=sD==="desc"?"asc":"desc";else{sC=c;sD="desc";}uF();r
 function uEF(){document.querySelectorAll("#erf .fb").forEach(function(b){var v=b.dataset.er;b.className="fb"+((!v&&efR==="all")||(v===efR)?" on":"");if(v&&RL[v])b.style.cssText=efR===v?"border-color:"+RL[v].c+";color:"+RL[v].c:"";});document.querySelectorAll("#eff .fb").forEach(function(b){var v=b.dataset.ef;b.className="fb"+((!v&&efF==="all")||(v===efF)?" on":"");if(v&&FL[v])b.style.cssText=efF===v?"border-color:"+FL[v].c+";color:"+FL[v].c:"";});}
 function tEF(t,v){if(t==="r")efR=efR===v?"all":v;else efF=efF===v?"all":v;uEF();rE();}
 
-// ═══ HEROES ═══
+// ═══ HEROES — live update without re-render ═══
 function rH(){
   var q=(document.getElementById("hs").value||"").toLowerCase();var l=H.slice();
-  if(fR!=="all")l=l.filter(function(h){return h.role===fR;});if(fF!=="all")l=l.filter(function(h){return h.fac===fF;});
+  if(fR!=="all")l=l.filter(function(h){return h.role===fR;});
+  if(fF!=="all")l=l.filter(function(h){return h.fac===fF;});
   if(q)l=l.filter(function(h){return h.en.toLowerCase().indexOf(q)>=0||h.ru.toLowerCase().indexOf(q)>=0;});
   l.sort(function(a,b){var d=0;if(sC==="power")d=(P[b.id]||0)-(P[a.id]||0);else if(sC==="name")d=a.en.localeCompare(b.en);else if(sC==="role")d=a.role.localeCompare(b.role);else d=a.fac.localeCompare(b.fac);return sD==="desc"?d:-d;});
-  var s="";l.forEach(function(h){var p=P[h.id]||0;var r=RL[h.role],f=FL[h.fac];var bw=Math.min(100,p/2000);var bc=p>100000?"#22c55e":p>50000?"#f59e0b":"#ef4444";
-    s+='<div class="hr" style="border-color:'+(p>0?r.c+"44":"#1e293b")+'"><span style="font-size:13px;width:18px;text-align:center">'+r.i+'</span><span style="font-size:11px;font-weight:600;color:#fff;min-width:110px">'+h.en+'</span><span class="bg" style="background:'+f.c+'22;color:'+f.c+'">'+f.l+'</span><span class="bg" style="background:'+r.c+'22;color:'+r.c+'">'+r.l+'</span><div style="margin-left:auto;display:flex;align-items:center;gap:3px"><input type="number" class="pi'+(p>0?" ok":"")+'" value="'+(p||"")+'" placeholder="0" onchange="sP(\''+h.id+'\',this.value)"><div style="width:35px;height:4px;border-radius:2px;background:rgba(255,255,255,.06);overflow:hidden"><div style="height:100%;border-radius:2px;width:'+bw+'%;background:'+bc+'"></div></div></div></div>';
-  });document.getElementById("hl").innerHTML=s;
-  var c=0;for(var k in P)if(P[k]>0)c++;document.getElementById("fc").textContent=c;
+  var s="";l.forEach(function(h){
+    var p=P[h.id]||0;var r=RL[h.role],f=FL[h.fac];
+    var bw=Math.min(100,p/2000);
+    var bc=p>100000?"#22c55e":p>50000?"#f59e0b":p>0?"#ef4444":"transparent";
+    s+='<div class="hr" id="row-'+h.id+'" style="border-color:'+(p>0?r.c+"44":"#1e293b")+'">'
+      +'<span style="font-size:13px;width:18px;text-align:center">'+r.i+'</span>'
+      +'<span style="font-size:11px;font-weight:600;color:#fff;min-width:105px">'+h.en+'</span>'
+      +'<span class="bg" style="background:'+f.c+'22;color:'+f.c+'">'+f.l+'</span>'
+      +'<span class="bg" style="background:'+r.c+'22;color:'+r.c+'">'+r.l+'</span>'
+      +'<div style="margin-left:auto;display:flex;align-items:center;gap:4px">'
+      +'<input type="number" class="pi'+(p>0?" ok":"")+'" value="'+(p||"")+'" placeholder="0" '
+      +'oninput="liveUpdate(\''+h.id+'\',this)">'
+      +'<div class="bar-w"><div class="bar-i" id="bar-'+h.id+'" style="width:'+bw+'%;background:'+bc+'"></div></div>'
+      +'</div></div>';
+  });
+  document.getElementById("hl").innerHTML=s;
+  updCount();
 }
-function sP(id,v){P[id]=parseInt(v)||0;sv();}
+
+// Live update: saves power, updates bar+border WITHOUT re-rendering (no focus loss)
+function liveUpdate(id,inp){
+  var v=parseInt(inp.value)||0;
+  P[id]=v;
+  sv();
+  // Update bar
+  var bar=document.getElementById("bar-"+id);
+  if(bar){
+    var bw=Math.min(100,v/2000);
+    var bc=v>100000?"#22c55e":v>50000?"#f59e0b":v>0?"#ef4444":"transparent";
+    bar.style.width=bw+"%";
+    bar.style.background=bc;
+  }
+  // Update row border
+  var row=document.getElementById("row-"+id);
+  if(row){
+    var h=fH(id);
+    var r=RL[h.role];
+    row.style.borderColor=v>0?r.c+"44":"#1e293b";
+  }
+  // Update input style
+  inp.className=v>0?"pi ok":"pi";
+  updCount();
+}
+
+function updCount(){
+  var c=0;for(var k in P)if(P[k]>0)c++;
+  document.getElementById("fc").textContent=c;
+}
 
 // ═══ TEAMS ═══
 function gSl(ti,si){var s=TM[ti].sl[si];if(tCfg[ti]&&tCfg[ti][si]&&s.a)return s.a;return s.b;}
 function tSl(ti,si){if(!tCfg[ti])tCfg[ti]={};tCfg[ti][si]=!tCfg[ti][si];rT();}
 function rT(){
-  var s="";TM.forEach(function(t,ti){var ids=t.sl.map(function(_,si){return gSl(ti,si);});var tt=0;ids.forEach(function(id){tt+=(P[id]||0);});var sc=tt>300000?"#22c55e":"#ef4444";
-    s+='<div class="cd" style="border-color:'+t.cl+'44"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap"><h3 style="font-size:14px;font-weight:800;color:'+t.cl+'">'+t.n+'</h3><span style="background:'+sc+'22;color:'+sc+';padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700">\u03A3 '+fmt(tt)+'</span></div><p style="font-size:10px;color:#64748b;margin-bottom:8px;line-height:1.5">'+t.d+'</p><div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px">';
-    t.sl.forEach(function(sl,si){var id=gSl(ti,si);var h=fH(id);if(!h)return;var p=P[id]||0;var r=RL[h.role],f=FL[h.fac];var isA=tCfg[ti]&&tCfg[ti][si]&&sl.a;
-      s+='<div class="th" style="background:'+t.cl+'0d;border:1px solid '+(isA?"#22c55e55":t.cl+"33")+'"><div style="font-size:15px">'+r.i+'</div><div style="font-size:10px;font-weight:700;color:'+(isA?"#a7f3d0":"#fff")+'">'+h.en+'</div><div style="font-size:8px;color:'+f.c+'">'+f.l+'</div><div style="font-size:8px;color:'+r.c+'">'+r.l+'</div><div style="font-size:11px;font-weight:700;margin-top:1px;color:'+(p>0?"#22c55e":"#ef4444")+'">'+fmt(p)+'</div></div>';});
+  var s="";TM.forEach(function(t,ti){
+    var ids=t.sl.map(function(_,si){return gSl(ti,si);});
+    var tt=0;ids.forEach(function(id){tt+=(P[id]||0);});
+    var sc=tt>300000?"#22c55e":"#ef4444";
+    s+='<div class="cd" style="border-color:'+t.cl+'44">'
+      +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap">'
+      +'<h3 style="font-size:14px;font-weight:800;color:'+t.cl+'">'+t.n+'</h3>'
+      +'<span style="background:'+sc+'22;color:'+sc+';padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700">\u03A3 '+fmt(tt)+'</span></div>'
+      +'<p style="font-size:10px;color:#64748b;margin-bottom:8px;line-height:1.5">'+t.d+'</p>'
+      +'<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px">';
+    t.sl.forEach(function(sl,si){
+      var id=gSl(ti,si);var h=fH(id);if(!h)return;
+      var p=P[id]||0;var r=RL[h.role],f=FL[h.fac];
+      var isA=tCfg[ti]&&tCfg[ti][si]&&sl.a;
+      s+='<div class="th" style="background:'+t.cl+'0d;border:1px solid '+(isA?"#22c55e55":t.cl+"33")+'">'
+        +'<div style="font-size:15px">'+r.i+'</div>'
+        +'<div style="font-size:10px;font-weight:700;color:'+(isA?"#a7f3d0":"#fff")+'">'+h.en+'</div>'
+        +'<div style="font-size:8px;color:'+f.c+'">'+f.l+'</div>'
+        +'<div style="font-size:8px;color:'+r.c+'">'+r.l+'</div>'
+        +'<div style="font-size:11px;font-weight:700;margin-top:1px;color:'+(p>0?"#22c55e":"#ef4444")+'">'+fmt(p)+'</div></div>';
+    });
     s+='</div><div style="display:flex;flex-wrap:wrap;gap:2px">';
-    t.sl.forEach(function(sl,si){if(!sl.a)return;var isA=tCfg[ti]&&tCfg[ti][si];var from=fH(isA?sl.a:sl.b);var to=fH(isA?sl.b:sl.a);
-      s+='<button class="sw-btn" style="border-color:'+t.cl+'55;color:'+(isA?"#a7f3d0":"#94a3b8")+'" onclick="tSl('+ti+','+si+')"><span style="color:#fca5a5">'+from.en+'</span> \u2192 <span style="color:#a7f3d0">'+to.en+'</span> <span style="font-size:8px;color:#64748b">('+sl.w+')</span></button>';});
-    s+='</div></div>';});
+    t.sl.forEach(function(sl,si){
+      if(!sl.a)return;
+      var isA=tCfg[ti]&&tCfg[ti][si];
+      var from=fH(isA?sl.a:sl.b);var to=fH(isA?sl.b:sl.a);
+      s+='<button class="sw-btn" style="border-color:'+t.cl+'55;color:'+(isA?"#a7f3d0":"#94a3b8")+'" onclick="tSl('+ti+','+si+')">'
+        +'<span style="color:#fca5a5">'+from.en+'</span> \u2192 <span style="color:#a7f3d0">'+to.en+'</span>'
+        +' <span style="font-size:8px;color:#64748b">('+sl.w+')</span></button>';
+    });
+    s+='</div></div>';
+  });
   document.getElementById("tl").innerHTML=s;
 }
 
 // ═══ COUNTER ═══
 function tgE(id){var i=eP.indexOf(id);if(i>=0){eP.splice(i,1);delete ePw[id];}else if(eP.length<5)eP.push(id);rE();}
-function setEPw(id,v){ePw[id]=parseInt(v)||0;rC();}
+function setEPw(id,el){ePw[id]=parseInt(el.value)||0;rC();}
 
 function rE(){
   var q=(document.getElementById("es").value||"").toLowerCase();var l=H.slice();
-  if(efR!=="all")l=l.filter(function(h){return h.role===efR;});if(efF!=="all")l=l.filter(function(h){return h.fac===efF;});
+  if(efR!=="all")l=l.filter(function(h){return h.role===efR;});
+  if(efF!=="all")l=l.filter(function(h){return h.fac===efF;});
   if(q)l=l.filter(function(h){return h.en.toLowerCase().indexOf(q)>=0||h.ru.toLowerCase().indexOf(q)>=0;});
   var s="";l.forEach(function(h){var sel=eP.indexOf(h.id)>=0;var dis=!sel&&eP.length>=5;
     s+='<button class="eb'+(sel?" sel":"")+(dis?" dis":"")+'" onclick="tgE(\''+h.id+'\')">'+RL[h.role].i+" "+h.en+"</button>";});
   document.getElementById("ep").innerHTML=s;
-  s="";eP.forEach(function(id){var h=fH(id);if(!h)return;var pw=ePw[id]||0;
-    s+='<span class="pt" onclick="tgE(\''+id+'\')">'+RL[h.role].i+" "+h.en+' \u00D7</span> <input type="number" class="epi'+(pw>0?" ok":"")+'" value="'+(pw||"")+'" placeholder="pwr" onchange="setEPw(\''+id+'\',this.value)"> ';});
+  // Picked with power inputs
+  s='<div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">';
+  eP.forEach(function(id){var h=fH(id);if(!h)return;var pw=ePw[id]||0;
+    s+='<div style="display:inline-flex;align-items:center;gap:3px">'
+      +'<span class="pt" onclick="tgE(\''+id+'\')">'+RL[h.role].i+" "+h.en+' \u00D7</span>'
+      +'<input type="number" class="epi'+(pw>0?" ok":"")+'" value="'+(pw||"")+'" placeholder="pwr" oninput="setEPw(\''+id+'\',this)">'
+      +'</div>';});
+  s+='</div>';
   document.getElementById("epk").innerHTML=s;
-  document.getElementById("ec").textContent=eP.length;rC();
+  document.getElementById("ec").textContent=eP.length;
+  rC();
 }
 
 function cSc(hero,en){var s=0;for(var i=0;i<en.length;i++){var e=en[i];for(var j=0;j<hero.cnt.length;j++){if(e.tags.indexOf(hero.cnt[j])>=0)s+=2;}for(var k=0;k<hero.tags.length;k++){if(e.cnt.indexOf(hero.tags[k])>=0)s+=1.5;}if(hero.dmg==="magic"&&e.dmg==="phys")s+=.3;if(hero.dmg==="phys"&&e.dmg==="magic")s+=.3;}return s;}
 
-function bTeam(en,usePower){
+function bTeam(en,usePwr){
   var av=H.filter(function(h){return eP.indexOf(h.id)<0;});
-  var sc=av.map(function(h){var r=cSc(h,en);var p=P[h.id]||0;var m=usePower?(p>0?p/100000:.01):1;return{id:h.id,en:h.en,role:h.role,fac:h.fac,dmg:h.dmg,tags:h.tags,cnt:h.cnt,raw:r,pwr:p,fin:r*m};});
+  if(usePwr)av=av.filter(function(h){return(P[h.id]||0)>0;});
+  var sc=av.map(function(h){
+    var r=cSc(h,en);var p=P[h.id]||0;
+    var m=usePwr?(p>0?p/100000:0):1;
+    return{id:h.id,en:h.en,role:h.role,fac:h.fac,dmg:h.dmg,tags:h.tags,cnt:h.cnt,raw:r,pwr:p,fin:r*m};
+  });
   var sa=sc.slice().sort(function(a,b){return b.fin-a.fin;});
   var tk=sc.filter(function(h){return h.role==="tank";}).sort(function(a,b){return b.fin-a.fin;});
   var hl=sc.filter(function(h){return h.role==="healer";}).sort(function(a,b){return b.fin-a.fin;});
@@ -281,30 +375,46 @@ function bTeam(en,usePower){
   return tm;
 }
 
-function renderTeam(tm,color,label){
+function renderPick(tm,color,label){
   var tp=0;tm.forEach(function(h){tp+=h.pwr;});
-  var s='<div class="ct-section" style="border-color:'+color+'44"><h4 style="font-size:12px;font-weight:700;color:'+color+';margin-bottom:8px">'+label+' \u2014 \u03A3 '+fmt(tp)+'</h4><div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px">';
+  var s='<div class="ct-section" style="border-color:'+color+'44">'
+    +'<h4 style="font-size:12px;font-weight:700;color:'+color+';margin-bottom:8px">'+label+' \u2014 \u03A3 '+fmt(tp)+'</h4>'
+    +'<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px">';
   tm.forEach(function(h){var r=RL[h.role],f=FL[h.fac];
-    s+='<div class="ch" style="background:'+color+'0a;border:1px solid '+color+'33"><div style="font-size:16px">'+r.i+'</div><div style="font-size:11px;font-weight:700;color:#fff">'+h.en+'</div><div style="font-size:8px;color:'+f.c+'">'+f.l+'</div><div style="font-size:11px;font-weight:700;margin-top:2px;color:'+(h.pwr>0?"#a7f3d0":"#64748b")+'">'+fmt(h.pwr)+'</div><div style="font-size:8px;color:#94a3b8">'+h.fin.toFixed(1)+'</div></div>';});
+    s+='<div class="ch" style="background:'+color+'0a;border:1px solid '+color+'33">'
+      +'<div style="font-size:16px">'+r.i+'</div>'
+      +'<div style="font-size:11px;font-weight:700;color:#fff">'+h.en+'</div>'
+      +'<div style="font-size:8px;color:'+f.c+'">'+f.l+'</div>'
+      +'<div style="font-size:11px;font-weight:700;margin-top:2px;color:'+(h.pwr>0?"#a7f3d0":"#64748b")+'">'+fmt(h.pwr)+'</div>'
+      +'<div style="font-size:8px;color:#94a3b8">score '+h.fin.toFixed(1)+'</div></div>';});
   s+='</div>';
-  tm.forEach(function(h){var mt=[];eP.forEach(function(eid){var ed=fH(eid);if(!ed)return;var m1=h.cnt.filter(function(c){return ed.tags.indexOf(c)>=0;});var m2=h.tags.filter(function(t){return ed.cnt.indexOf(t)>=0;});if(m1.length||m2.length)mt.push(ed.en);});
-    s+='<div style="font-size:9px;color:#cbd5e1;padding:1px 0"><strong style="color:'+RL[h.role].c+'">'+h.en+'</strong>'+(mt.length>0?' \u2192 counters: '+mt.join(", "):' \u2192 fills '+RL[h.role].l+' role')+'</div>';});
-  s+='</div>';return s;
+  tm.forEach(function(h){var mt=[];eP.forEach(function(eid){var ed=fH(eid);if(!ed)return;
+    var m1=h.cnt.filter(function(c){return ed.tags.indexOf(c)>=0;});
+    var m2=h.tags.filter(function(t){return ed.cnt.indexOf(t)>=0;});
+    if(m1.length||m2.length)mt.push(ed.en);});
+    s+='<div style="font-size:9px;color:#cbd5e1;padding:1px 0"><strong style="color:'+RL[h.role].c+'">'+h.en+'</strong>'
+      +(mt.length>0?' \u2192 counters: '+mt.join(", "):' \u2192 fills '+RL[h.role].l)+'</div>';});
+  return s+'</div>';
 }
 
 function rC(){
   var el=document.getElementById("cr");
-  if(eP.length<5){el.innerHTML=eP.length===0?'<div style="text-align:center;padding:24px;color:#64748b;font-size:12px">Select 5 enemy heroes above</div>':'<div style="text-align:center;padding:16px;color:#64748b;font-size:12px">'+(5-eP.length)+' more needed</div>';return;}
+  if(eP.length<5){el.innerHTML=eP.length===0?'<div style="text-align:center;padding:24px;color:#64748b;font-size:12px">Select 5 enemy heroes above</div>':'<div style="text-align:center;padding:16px;color:#64748b;font-size:12px">'+(5-eP.length)+' more</div>';return;}
   var en=eP.map(fH).filter(Boolean);
-  var ePwTotal=0;eP.forEach(function(id){ePwTotal+=(ePw[id]||0);});
-  // Enemy summary
-  var s='<div style="background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:10px;padding:8px;margin-bottom:10px;font-size:11px;color:#fca5a5"><strong>Enemy:</strong> '+eP.map(function(id){var h=fH(id);var pw=ePw[id];return h.en+(pw>0?" ("+fmt(pw)+")":"");}).join(" \u2022 ")+(ePwTotal>0?" \u2014 \u03A3 "+fmt(ePwTotal):"")+'</div>';
-  // Ideal counter (no power weight)
+  var ePt=0;eP.forEach(function(id){ePt+=(ePw[id]||0);});
+  var s='<div style="background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:10px;padding:8px;margin-bottom:10px;font-size:11px;color:#fca5a5">'
+    +'<strong>Enemy:</strong> '+eP.map(function(id){var h=fH(id);var pw=ePw[id];return h.en+(pw>0?" ("+fmt(pw)+")":"");}).join(" \u2022 ")
+    +(ePt>0?" \u2014 \u03A3 "+fmt(ePt):"")+'</div>';
   var ideal=bTeam(en,false);
-  s+=renderTeam(ideal,"#f59e0b","\u2B50 Ideal Counter (best synergy, ignoring your power)");
-  // Your best counter (weighted by power)
-  var yours=bTeam(en,true);
-  s+=renderTeam(yours,"#22c55e","\uD83D\uDCAA Your Best Counter (weighted by your hero power)");
+  s+=renderPick(ideal,"#f59e0b","\u2B50 Ideal Counter (pure synergy)");
+  // Your best — only heroes with power > 0
+  var hasPowered=H.some(function(h){return eP.indexOf(h.id)<0&&(P[h.id]||0)>0;});
+  if(hasPowered){
+    var yours=bTeam(en,true);
+    s+=renderPick(yours,"#22c55e","\uD83D\uDCAA Your Best Counter (by your power)");
+  } else {
+    s+='<div style="text-align:center;padding:12px;color:#64748b;font-size:11px;border:1px dashed #334155;border-radius:10px;margin-top:8px">Fill hero powers in Heroes tab to see your personal best counter-pick</div>';
+  }
   el.innerHTML=s;
 }
 
@@ -313,9 +423,9 @@ function rD(){
   var q=(document.getElementById("ds").value||"").toLowerCase();
   var l=H.slice().sort(function(a,b){return a.en.localeCompare(b.en);});
   if(q)l=l.filter(function(h){return h.en.toLowerCase().indexOf(q)>=0||h.ru.toLowerCase().indexOf(q)>=0;});
-  var s='<div style="display:flex;padding:4px 8px;font-size:10px;font-weight:700;color:#64748b;border-bottom:1px solid #334155"><span style="flex:1">English</span><span style="flex:1">Russian (\u0420\u0443\u0441\u0441\u043a\u0438\u0439)</span><span style="width:70px">Role</span><span style="width:70px">Faction</span></div>';
+  var s='<div style="display:flex;padding:4px 8px;font-size:10px;font-weight:700;color:#64748b;border-bottom:1px solid #334155"><span style="flex:1">English</span><span style="flex:1">Russian</span><span style="width:70px">Role</span><span style="width:70px">Faction</span></div>';
   l.forEach(function(h){var r=RL[h.role],f=FL[h.fac];
-    s+='<div class="dict-row"><span style="flex:1;color:#fff;font-weight:600">'+h.en+'</span><span style="flex:1;color:#94a3b8">'+h.ru+'</span><span style="width:70px"><span class="bg" style="background:'+r.c+'22;color:'+r.c+'">'+r.i+" "+r.l+'</span></span><span style="width:70px"><span class="bg" style="background:'+f.c+'22;color:'+f.c+'">'+f.l+'</span></span></div>';});
+    s+='<div class="dict-row"><span style="flex:1;color:#fff;font-weight:600">'+h.en+'</span><span style="flex:1;color:#94a3b8">'+h.ru+'</span><span style="width:70px"><span class="bg" style="background:'+r.c+'22;color:'+r.c+'">'+r.l+'</span></span><span style="width:70px"><span class="bg" style="background:'+f.c+'22;color:'+f.c+'">'+f.l+'</span></span></div>';});
   document.getElementById("dl").innerHTML=s;
 }
 
